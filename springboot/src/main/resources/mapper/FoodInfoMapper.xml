@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- FoodInfoMapper.xml -->
+<mapper namespace="com.example.mapper.FoodInfoMapper">
+    <sql id="Base_Column_List">
+        id, user_id, preferences, avoids, willingness, create_time, update_time
+    </sql>
+
+    <select id="selectByUserId" resultType="FoodInfo">
+        SELECT <include refid="Base_Column_List"/>
+        FROM food_info WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO food_info (user_id, preferences, avoids, willingness, create_time, update_time)
+        VALUES (#{userId}, #{preferences}, #{avoids}, #{willingness}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateById">
+        UPDATE food_info
+        <set>
+            <if test="preferences != null">preferences=#{preferences},</if>
+            <if test="avoids != null">avoids=#{avoids},</if>
+            <if test="willingness != null">willingness=#{willingness},</if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        WHERE user_id=#{userId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM food_info WHERE id=#{id}
+    </delete>
+</mapper>

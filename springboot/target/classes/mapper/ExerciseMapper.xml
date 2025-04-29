@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ExerciseMapper">
+
+    <!-- 公共字段抽取 -->
+    <sql id="Base_Column_List">
+        exercise_id, exercise_name, exercise_category, calories_burn_rate
+    </sql>
+
+    <!-- 查询所有（可带条件） -->
+    <select id="selectAll" resultType="com.example.entity.Exercise">
+        select
+        <include refid="Base_Column_List" />
+        from exercise
+        <where>
+            <if test="exerciseId != null">AND exercise_id = #{exerciseId}</if>
+            <if test="exerciseName != null and exerciseName != ''">AND exercise_name like concat('%', #{exerciseName}, '%')</if>
+            <if test="exerciseCategory != null and exerciseCategory != ''">AND exercise_category = #{exerciseCategory}</if>
+            <if test="caloriesBurnRate != null">AND calories_burn_rate = #{caloriesBurnRate}</if>
+        </where>
+        order by exercise_id desc
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultType="com.example.entity.Exercise">
+        select
+        <include refid="Base_Column_List" />
+        from exercise
+        where exercise_id = #{id}
+    </select>
+
+    <!-- 删除 -->
+    <delete id="deleteById">
+        delete from exercise
+        where exercise_id = #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insert" parameterType="com.example.entity.Exercise"
+            useGeneratedKeys="true" keyProperty="exerciseId">
+        insert into exercise
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="exerciseId != null">exercise_id,</if>
+            <if test="exerciseName != null">exercise_name,</if>
+            <if test="exerciseCategory != null">exercise_category,</if>
+            <if test="caloriesBurnRate != null">calories_burn_rate,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="exerciseId != null">#{exerciseId},</if>
+            <if test="exerciseName != null">#{exerciseName},</if>
+            <if test="exerciseCategory != null">#{exerciseCategory},</if>
+            <if test="caloriesBurnRate != null">#{caloriesBurnRate},</if>
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateById" parameterType="com.example.entity.Exercise">
+        update exercise
+        <set>
+            <if test="exerciseName != null">exercise_name = #{exerciseName},</if>
+            <if test="exerciseCategory != null">exercise_category = #{exerciseCategory},</if>
+            <if test="caloriesBurnRate != null">calories_burn_rate = #{caloriesBurnRate},</if>
+        </set>
+        where exercise_id = #{exerciseId}
+    </update>
+
+</mapper>

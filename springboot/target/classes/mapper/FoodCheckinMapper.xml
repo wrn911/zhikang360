@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.FoodCheckinMapper">
+
+    <sql id="Base_Column_List">
+        checkin_id, user_id, checkin_type, food_id, food_name, gram_ate,
+        calories_ate, carbohydrates_ate, fat_ate, protein_ate, fiber_ate, create_time
+    </sql>
+
+    <insert id="insert" parameterType="com.example.entity.FoodCheckin" useGeneratedKeys="true" keyProperty="checkinId">
+        INSERT INTO food_checkin
+        (user_id, checkin_type, food_id, food_name, gram_ate, calories_ate,
+        carbohydrates_ate, fat_ate, protein_ate, fiber_ate, create_time)
+        VALUES (
+        #{userId},
+        #{checkinType},
+        #{foodId},
+        #{foodName},
+        #{gramAte},
+        #{caloriesAte},
+        #{carbohydratesAte},
+        #{fatAte},
+        #{proteinAte},
+        #{fiberAte},
+        NOW()
+        )
+    </insert>
+
+    <select id="selectCheckinCounts" resultType="com.example.DAO.CheckinCountDTO">
+        SELECT
+        COUNT(CASE WHEN DATE(create_time) = CURRENT_DATE() THEN 1 END) AS today_count,
+        COUNT(CASE WHEN DATE(create_time) = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) THEN 1 END) AS yesterday_count
+        FROM food_checkin
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectHistory" resultType="com.example.entity.FoodCheckin">
+        SELECT
+        checkin_id,
+        user_id,
+        checkin_type,
+        food_id,
+        food_name,
+        gram_ate,
+        calories_ate,
+        carbohydrates_ate,
+        fat_ate,
+        protein_ate,
+        fiber_ate,
+        create_time
+        FROM food_checkin
+        WHERE user_id = #{userId}
+        AND DATE(create_time) = #{date}
+        ORDER BY create_time ASC
+    </select>
+
+    <select id="selectByUserIdAndFoodId" resultType="com.example.entity.FoodCheckin">
+        SELECT
+        checkin_id,
+        user_id,
+        checkin_type,
+        food_id,
+        food_name,
+        gram_ate,
+        calories_ate,
+        carbohydrates_ate,
+        fat_ate,
+        protein_ate,
+        fiber_ate,
+        create_time
+        FROM food_checkin
+        WHERE user_id = #{userId}
+        AND food_id = #{foodId}
+        AND checkin_type = #{checkInType}
+        AND DATE(create_time) = #{date}
+        ORDER BY create_time ASC
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM food_checkin WHERE checkin_id = #{checkinId}
+    </delete>
+
+    <update id="updateById" parameterType="com.example.entity.FoodCheckin">
+        UPDATE food_checkin
+        <set>
+            <if test="checkinType != null">checkin_type = #{checkinType},</if>
+            <if test="foodId != null">food_id = #{foodId},</if>
+            <if test="foodName != null">food_name = #{foodName},</if>
+            <if test="gramAte != null">gram_ate = #{gramAte},</if>
+            <if test="caloriesAte != null">calories_ate = #{caloriesAte},</if>
+            <if test="carbohydratesAte != null">carbohydrates_ate = #{carbohydratesAte},</if>
+            <if test="fatAte != null">fat_ate = #{fatAte},</if>
+            <if test="proteinAte != null">protein_ate = #{proteinAte},</if>
+            <if test="fiberAte != null">fiber_ate = #{fiberAte}</if>
+        </set>
+        WHERE checkin_id = #{checkinId}
+    </update>
+
+    <select id="selectById" resultType="com.example.entity.FoodCheckin">
+        SELECT <include refid="Base_Column_List"/>
+        FROM food_checkin WHERE checkin_id = #{checkinId}
+    </select>
+
+    <select id="selectAll" resultType="com.example.entity.FoodCheckin">
+        SELECT <include refid="Base_Column_List"/>
+        FROM food_checkin
+        <where>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="checkinType != null and checkinType != ''">AND checkin_type = #{checkinType}</if>
+            <if test="foodName != null and foodName != ''">AND food_name LIKE CONCAT('%', #{foodName}, '%')</if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

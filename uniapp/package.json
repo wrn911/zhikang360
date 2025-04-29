@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@dcloudio/uni-ui": "^1.5.7",
+    "@qiun/ucharts": "^2.5.0-20230101",
+    "axios": "^1.8.3",
+    "dayjs": "^1.11.13",
+    "lodash": "^4.17.21"
+  }
+}

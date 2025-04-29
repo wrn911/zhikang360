@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- SleepInfoMapper.xml -->
+<mapper namespace="com.example.mapper.SleepInfoMapper">
+    <sql id="Base_Column_List">
+        id, user_id, sleep_time, wakeup_time, emotions, create_time, update_time
+    </sql>
+
+    <select id="selectByUserId" resultType="SleepInfo">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sleep_info WHERE user_id=#{userId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sleep_info (user_id, sleep_time, wakeup_time, emotions, create_time, update_time)
+        VALUES (#{userId}, #{sleepTime}, #{wakeupTime}, #{emotions}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateById">
+        UPDATE sleep_info
+        <set>
+            <if test="sleepTime != null">sleep_time=#{sleepTime},</if>
+            <if test="wakeupTime != null">wakeup_time=#{wakeupTime},</if>
+            <if test="emotions != null">emotions=#{emotions},</if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        WHERE user_id=#{userId}
+    </update>
+</mapper>

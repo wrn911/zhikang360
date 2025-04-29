@@ -1,0 +1,156 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 外联样式 */
+.switch-login-btn {
+  /* 尺寸控制 */
+  height: 60rpx !important;
+  line-height: 60rpx !important;
+  min-width: 240rpx !important;
+  
+  /* 背景与边框 */
+  background-color: #fff !important;
+  border: none !important;
+  
+  /* 文字样式 */
+  color: #666 !important;
+  font-size: 26rpx !important;
+  
+  /* 布局定位 */
+  display: block;
+  margin: 20rpx auto 0;
+  padding: 0 30rpx;
+  
+  /* 去除默认效果 */
+  border-radius: 0;
+  box-shadow: none;
+}
+/* 可选：添加点击态 */
+.switch-login-btn:active {
+  opacity: 0.8;
+}
+

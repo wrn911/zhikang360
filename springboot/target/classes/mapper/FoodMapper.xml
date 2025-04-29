@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.FoodMapper">
+
+    <!-- 公共字段抽取 -->
+    <sql id="Base_Column_List">
+        id, name, category, calories, carbohydrates, fat, protein, fiber, unit
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Food">
+        select
+        <include refid="Base_Column_List" />
+        from food
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="name != null and name != ''">
+                AND name like concat('%', #{name}, '%')
+            </if>
+            <!-- 修改category条件判断 -->
+            <if test="category != null and category != ''">
+                AND category = #{category}
+            </if>
+            <if test="calories != null">AND calories = #{calories}</if>
+            <if test="carbohydrates != null">AND carbohydrates = #{carbohydrates}</if>
+            <if test="fat != null">AND fat = #{fat}</if>
+            <if test="protein != null">AND protein = #{protein}</if>
+            <if test="fiber != null">AND fiber = #{fiber}</if>
+            <if test="unit != null and unit != ''">
+                AND unit = #{unit}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultType="com.example.entity.Food">
+        select
+        <include refid="Base_Column_List" />
+        from food
+        where id = #{id}
+    </select>
+
+    <!-- 删除 -->
+    <delete id="deleteById">
+        delete from food
+        where id = #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insert" parameterType="com.example.entity.Food"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into food
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="category != null">category,</if>
+            <if test="calories != null">calories,</if>
+            <if test="carbohydrates != null">carbohydrates,</if>
+            <if test="fat != null">fat,</if>
+            <if test="protein != null">protein,</if>
+            <if test="fiber != null">fiber,</if>
+            <if test="unit != null">unit,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="category != null">#{category},</if>
+            <if test="calories != null">#{calories},</if>
+            <if test="carbohydrates != null">#{carbohydrates},</if>
+            <if test="fat != null">#{fat},</if>
+            <if test="protein != null">#{protein},</if>
+            <if test="fiber != null">#{fiber},</if>
+            <if test="unit != null">#{unit},</if>
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateById" parameterType="com.example.entity.Food">
+        update food
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="calories != null">calories = #{calories},</if>
+            <if test="carbohydrates != null">carbohydrates = #{carbohydrates},</if>
+            <if test="fat != null">fat = #{fat},</if>
+            <if test="protein != null">protein = #{protein},</if>
+            <if test="fiber != null">fiber = #{fiber},</if>
+            <if test="unit != null">unit = #{unit},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

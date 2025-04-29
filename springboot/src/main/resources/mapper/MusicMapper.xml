@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.MusicMapper">
+
+    <!-- 音乐表字段映射 -->
+    <resultMap id="MusicResultMap" type="com.example.entity.Music">
+        <id column="music_id" property="musicId" />
+        <result column="user_id" property="userId" />
+        <result column="title" property="title" />
+        <result column="type" property="type" />
+        <result column="duration" property="duration" />
+        <result column="music_url" property="musicUrl" />
+        <result column="play_count" property="playCount" />
+        <result column="create_time" property="createTime" />
+        <result column="if_favorite" property="ifFavorite" />
+    </resultMap>
+
+    <!-- 查询所有音乐 -->
+    <select id="selectMusicList" resultMap="MusicResultMap">
+        SELECT
+        music_id, user_id, title, type,
+        duration, music_url, play_count, create_time, if_favorite
+        FROM music
+        where user_id = #{userId}
+    </select>
+
+    <!-- 插入音乐记录（自动回填自增主键） -->
+    <insert id="insert" parameterType="com.example.entity.Music">
+        INSERT INTO music (
+        user_id,
+        title,
+        duration,
+        music_url,
+        type,
+        play_count,
+        if_favorite,
+        create_time
+        ) VALUES (
+        #{userId},
+        #{title},
+        #{duration},
+        #{musicUrl},
+        #{type},
+        #{playCount},
+        #{ifFavorite},
+        #{createTime}
+        )
+    </insert>
+
+</mapper>

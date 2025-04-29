@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- SportInfoMapper.xml -->
+<mapper namespace="com.example.mapper.SportInfoMapper">
+    <sql id="Base_Column_List">
+        id, user_id, preferences, weaknesses, experience, intensity,
+        willingness, free_times, create_time, update_time
+    </sql>
+
+    <select id="selectByUserId" resultType="SportInfo">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sport_info WHERE user_id=#{userId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sport_info
+        (user_id, preferences, weaknesses, experience, intensity, willingness, free_times, create_time, update_time)
+        VALUES (#{userId}, #{preferences}, #{weaknesses}, #{experience},
+        #{intensity}, #{willingness}, #{freeTimes}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateById">
+        UPDATE sport_info
+        <set>
+            <if test="preferences != null">preferences=#{preferences},</if>
+            <if test="weaknesses != null">weaknesses=#{weaknesses},</if>
+            <if test="experience != null">experience=#{experience},</if>
+            <if test="intensity != null">intensity=#{intensity},</if>
+            <if test="willingness != null">willingness=#{willingness},</if>
+            <if test="freeTimes != null">free_times=#{freeTimes},</if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        WHERE user_id=#{userId}
+    </update>
+</mapper>

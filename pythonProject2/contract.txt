@@ -1,0 +1,14 @@
+status	0x1 Transaction mined and execution succeed
+transaction hash	0x2faf1cc5ae7d77bf8ab1b8d20912b5b6edcb4d6ee4b085202aeb2e5841dac9b4
+block hash	0x18daa80a55852f9261e1f12dae74647ad380a2f72b9cd192aa2aba0079f52186
+block number	3666055
+contract address	0x04ed3b840e987c6d34dff8c51a1e5a4df8a9c73d
+from	0x3cc62ea2922ca9bf988fd91bf38dff7e3610072f
+to	munft.(constructor)
+gas	338934 gas
+transaction cost	338934 gas 
+input	0x608...a0033
+decoded input	{}
+decoded output	 - 
+logs	[]
+raw logs	[]

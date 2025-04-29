@@ -1,0 +1,25 @@
+{
+    "name": "数字艺术 #1",
+    "description": "项目实训专用，mint by wyh ，作为勋章上链",
+    "image": "ipfs://bafkreiedt42l27p6jdkywdpah3czau7bowd7p4b4srbosehdhcwnnklyge",
+    "attributes": [
+        {
+            "trait_type": "艺术家",
+            "value": "区块链艺术家"
+        },
+        {
+            "trait_type": "创作日期",
+            "value": "2025-04-25"
+        },
+        {
+            "trait_type": "稀有度",
+            "value": "稀有"
+        },
+        {
+            "trait_type": "版本",
+            "value": "1.0"
+        }
+    ],
+    "external_url": "https://example.com/nft/1",
+    "background_color": "000000"
+}

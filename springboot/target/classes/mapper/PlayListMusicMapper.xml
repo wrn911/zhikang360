@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.PlayListMusicMapper">
+
+    <!-- 播放列表音乐关联表字段映射 -->
+    <resultMap id="PlayListMusicResultMap" type="com.example.entity.PlayListMusic">
+        <id column="id" property="id" />
+        <result column="play_list_id" property="playListId" />
+        <result column="music_id" property="musicId" />
+        <result column="user_id" property="userId" />
+        <result column="location" property="location" />
+        <result column="music_url" property="musicUrl" />
+        <result column="if_now" property="ifNow" />
+    </resultMap>
+
+    <!-- 添加音乐到播放列表 -->
+    <insert id="insertPlayListMusic" parameterType="com.example.entity.PlayListMusic">
+        INSERT INTO play_list_music
+        (play_list_id, music_id, user_id, location, music_url, if_now)
+        VALUES
+        (#{playListId}, #{musicId}, #{userId}, #{location}, #{musicUrl}, #{ifNow})
+    </insert>
+
+    <!-- 查询当前PlayList -->
+    <select id="selectNowPlayListMusic" resultType="com.example.entity.PlayListMusic">
+        SELECT
+        plm.*
+        FROM
+        play_list_music AS plm
+        JOIN (
+        SELECT
+        play_list_id
+        FROM
+        play_list
+        WHERE
+        user_id = #{userId}
+        AND if_now = 1
+        ) AS pl1
+        ON plm.play_list_id = pl1.play_list_id
+        ORDER BY
+        plm.location ASC
+    </select>
+
+    <!-- 查询对应userId和playListId对应的musicDetail
+    <select id="selectMusicDetailByPlayListId" resultType="com.example.entity.MusicDetail">
+        SELECT
+        music_id,
+        title,
+        type,
+        duration,
+        music_url,
+        if_favorite,
+        play_list_id,
+        location,
+        if_now
+        FROM
+        (
+        select * from play_list_music where user_id = #{userId} AND play_list_id = #{playListId}
+        )
+        natural join music
+    </select>-->
+
+    <select id="selectMusicDetailByPlayListId" resultType="com.example.entity.MusicDetail">
+        SELECT
+        pm.id,
+        m.music_id,  <!-- 建议使用别名匹配 Java 实体类属性 -->
+        m.title,
+        m.type,
+        m.duration,
+        m.music_url,
+        m.if_favorite,
+        pm.play_list_id,
+        pm.location,
+        pm.if_now
+        FROM play_list_music pm  <!-- 直接使用表别名简化 -->
+        INNER JOIN music m
+        ON pm.music_id = m.music_id
+        WHERE pm.user_id = #{userId}
+        AND pm.play_list_id = #{playListId}
+    </select>
+
+    <!-- 查询当前播放的Location -->
+    <select id="selectNowLocation" resultType="com.example.entity.PlayListMusic">
+        SELECT
+        *
+        FROM
+        play_list_music
+        where user_id = #{userId} AND if_now = 1
+    </select>
+
+    <update id="updatePlayListMusics">
+            UPDATE play_list_music
+            <set>
+                <if test="location != null">location = #{location},</if>
+                <if test="playListId != null">play_list_id = #{playListId},</if>
+                <if test="ifNow != null">if_now = #{ifNow},</if>
+            </set>
+            WHERE id = #{id}
+            AND user_id = #{userId}  <!-- 用户隔离 -->
+    </update>
+
+</mapper>

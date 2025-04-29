@@ -1,0 +1,3 @@
+https://app.pinata.cloud/ipfs/files
+picjson  bafkreidbdpvtqid5bfj3hwieowbojva76xxnurk63ob3h4qkgyrrisydgq
+pic2json bafkreifhwm5azzumymctqhlwsvhhgof3rcc5qphkb4ryszrto3nb6ouaua

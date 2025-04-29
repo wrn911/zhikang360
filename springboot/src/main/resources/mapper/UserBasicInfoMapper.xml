@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserBasicInfoMapper">
+
+    <sql id="Base_Column_List">
+        user_id, gender, birth_date, height, weight, blood_pressure, blood_sugar,
+        update_time_h, update_time_w, update_time_bp, update_time_bs
+    </sql>
+
+    <insert id="insert" parameterType="com.example.entity.UserBasicInfo">
+        INSERT INTO user_basic_info
+        (user_id, gender, birth_date, height, weight, blood_pressure, blood_sugar)
+        VALUES (#{userId}, #{gender}, #{birthDate}, #{height}, #{weight}, #{bloodPressure}, #{bloodSugar})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM user_basic_info WHERE user_id = #{userId}
+    </delete>
+
+    <update id="updateById" parameterType="com.example.entity.UserBasicInfo">
+        UPDATE user_basic_info
+        <set>
+            <if test="gender != null and gender != ''">gender = #{gender},</if>
+            <if test="birthDate != null">birth_date = #{birthDate},</if>
+            <if test="height != null and height != ''">height = #{height}, update_time_h = NOW(),</if>
+            <if test="weight != null and weight != ''">weight = #{weight}, update_time_w = NOW(),</if>
+            <if test="bloodPressure != null and bloodPressure != ''">blood_pressure = #{bloodPressure}, update_time_bp = NOW(),</if>
+            <if test="bloodSugar != null and bloodSugar != ''">blood_sugar = #{bloodSugar}, update_time_bs = NOW(),</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="selectById" resultType="com.example.entity.UserBasicInfo">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_basic_info WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectAll" resultType="com.example.entity.UserBasicInfo">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_basic_info
+        <where>
+            <if test="gender != null">AND gender = #{gender}</if>
+        </where>
+        ORDER BY update_time_h DESC
+    </select>
+
+    <!-- user_check_info 表相关操作 -->
+    <insert id="insertCheckInfo" parameterType="com.example.entity.UserCheckInfo">
+        INSERT INTO user_check_info (
+        user_id,
+        food_add_day,
+        sport_add_day,
+        food_continue_day,
+        sport_continue_day,
+        add_food_cal,
+        add_sport_cal
+        ) VALUES (
+        #{userId},
+        #{foodAddDay},
+        #{sportAddDay},
+        #{foodContinueDay},
+        #{sportContinueDay},
+        #{addFoodCal},
+        #{addSportCal}
+        )
+    </insert>
+
+    <update id="updateCheckInfo" parameterType="com.example.entity.UserCheckInfo">
+        UPDATE user_check_info
+        <set>
+            <if test="foodAddDay != null">food_add_day = #{foodAddDay},</if>
+            <if test="sportAddDay != null">sport_add_day = #{sportAddDay},</if>
+            <if test="foodContinueDay != null">food_continue_day = #{foodContinueDay},</if>
+            <if test="sportContinueDay != null">sport_continue_day = #{sportContinueDay},</if>
+            <if test="addFoodCal != null">add_food_cal = #{addFoodCal},</if>
+            <if test="addSportCal != null">add_sport_cal = #{addSportCal},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="selectCheckInfoById" resultType="com.example.entity.UserCheckInfo">
+        SELECT
+        user_id,
+        food_add_day,
+        sport_add_day,
+        food_continue_day,
+        sport_continue_day,
+        add_food_cal,
+        add_sport_cal
+        FROM user_check_info
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectCheckInfoAll" resultType="com.example.entity.UserCheckInfo"
+            parameterType="com.example.entity.UserCheckInfo">
+        SELECT
+        user_id,
+        food_add_day,
+        sport_add_day,
+        food_continue_day,
+        sport_continue_day,
+        add_food_cal,
+        add_sport_cal
+        FROM user_check_info
+        <where>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="foodAddDay != null">AND food_add_day = #{foodAddDay}</if>
+            <if test="sportAddDay != null">AND sport_add_day = #{sportAddDay}</if>
+            <if test="foodContinueDay != null">AND food_continue_day = #{foodContinueDay}</if>
+            <if test="sportContinueDay != null">AND sport_continue_day = #{sportContinueDay}</if>
+            <if test="addFoodCal != null">AND add_food_cal = #{addFoodCal}</if>
+            <if test="addSportCal != null">AND add_sport_cal = #{addSportCal}</if>
+        </where>
+    </select>
+
+</mapper>

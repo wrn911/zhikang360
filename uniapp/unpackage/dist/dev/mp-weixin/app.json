@@ -1,0 +1,60 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/health/health",
+    "pages/me/me",
+    "pages/login/login",
+    "pages/register/register",
+    "pages/aboutUs/aboutUs",
+    "pages/agreement/agreement",
+    "pages/person/person",
+    "pages/baseinfo/baseinfo",
+    "pages/blog/blog",
+    "pages/foodinfo/foodinfo",
+    "pages/sportinfo/sportinfo",
+    "pages/sleepinfo/sleepinfo",
+    "pages/food/food",
+    "pages/sport/sport",
+    "pages/sleep/sleep",
+    "pages/aihelper/aihelper"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "智康360",
+    "navigationBarBackgroundColor": "#71d017",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "backgroundColor": "#fff",
+    "selectedColor": "#ffd100",
+    "color": "#666",
+    "list": [
+      {
+        "iconPath": "/static/icons/body.png",
+        "selectedIconPath": "static/icons/body-active.png",
+        "text": "身体信息",
+        "pagePath": "pages/index/index"
+      },
+      {
+        "iconPath": "/static/icons/health.png",
+        "selectedIconPath": "static/icons/health-active.png",
+        "text": "健康管理",
+        "pagePath": "pages/health/health"
+      },
+      {
+        "iconPath": "/static/icons/blog.png",
+        "selectedIconPath": "static/icons/blog-active.png",
+        "text": "博客",
+        "pagePath": "pages/blog/blog"
+      },
+      {
+        "iconPath": "/static/icons/me.png",
+        "selectedIconPath": "static/icons/me-active.png",
+        "text": "个人信息",
+        "pagePath": "pages/me/me"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

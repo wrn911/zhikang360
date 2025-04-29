@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.IntroductionMapper">
+
+    <sql id="Base_Column_List">
+        id,name,img,content,comment,collect,views,time,user_id
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Introduction">
+        select introduction.*, user.username as userName, user.avatar as userAvatar
+        from introduction
+        left join user on introduction.user_id = user.id
+        <where>
+            <if test="id != null"> and id= #{id}</if>
+            <if test="name != null"> and introduction.name like concat('%', #{name}, '%')</if>
+            <if test="description != null">
+                and (
+                    introduction.content like concat('%', #{description}, '%')
+                    or introduction.name like concat('%', #{description}, '%')
+                )
+            </if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Introduction">
+        select
+        <include refid="Base_Column_List" />
+        from introduction
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from introduction
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Introduction" useGeneratedKeys="true">
+        insert into introduction
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="name != null">name,</if>
+                <if test="img != null">img,</if>
+                <if test="content != null">content,</if>
+                <if test="time != null">time,</if>
+                <if test="comment != null">comment,</if>
+                <if test="collect != null">collect,</if>
+                <if test="views != null">views,</if>
+                <if test="userId != null">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="name != null">#{name},</if>
+                <if test="img != null">#{img},</if>
+                <if test="content != null">#{content},</if>
+                <if test="time != null">#{time},</if>
+                <if test="comment != null">#{comment},</if>
+                <if test="collect != null">#{collect},</if>
+                <if test="views != null">#{views},</if>
+                <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+    <!--name,img,content,comment,collect,views,time,user_id-->
+    <update id="updateById" parameterType="com.example.entity.Introduction">
+        update introduction
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="img != null">
+                img = #{img},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+            <if test="collect != null">
+                collect = #{collect},
+            </if>
+            <if test="views != null">
+                views = #{views},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+</mapper>

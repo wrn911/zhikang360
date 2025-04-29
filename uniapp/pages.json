@@ -1,0 +1,220 @@
+{
+    "pages": [ 
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登 录"
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "身体信息"
+			}
+		},
+		{
+			"path": "pages/baseinfo/baseinfo",
+			"style": {
+				"navigationBarTitleText": "基本信息采集"
+			}
+		},
+		{
+			"path": "pages/blog/blog",
+			"style": {
+				"navigationBarTitleText": "博客",
+				"onReachBottonDistance":50
+			}
+		},		
+		{
+			"path" : "pages/blog/blogDetill",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/blog/editBlog",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path": "pages/health/health",
+			"style": {
+				"navigationBarTitleText": "健康管理",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/me/me",
+			"style": {
+				"navigationBarTitleText": "个人信息",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/mybadge/mybadge",
+			"style": {
+				"navigationBarTitleText": "勋章墙",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarTitleText": "注 册",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/aboutUs/aboutUs",
+			"style": {
+				"navigationBarTitleText": "关于我们",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/allinfo/allinfo",
+			"style": {
+				"navigationBarTitleText": "个性化信息",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/agreement/agreement",
+			"style": {
+				"navigationBarTitleText": "用户协议",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/person/person",
+			"style": {
+				"navigationBarTitleText": "个人信息",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/foodinfo/foodinfo",
+			"style": {
+				"navigationBarTitleText": "饮食信息采集"
+			}
+		},
+		{
+			"path": "pages/sportinfo/sportinfo",
+			"style": {
+				"navigationBarTitleText": "运动信息采集"
+			}
+		},
+		{
+			"path": "pages/sleepinfo/sleepinfo",
+			"style": {
+				"navigationBarTitleText": "睡眠信息采集"
+			}
+		},
+		{
+			"path": "pages/food/food1",
+			"style": {
+				"navigationBarTitleText": "饮食"
+			}
+		},
+		{
+			"path": "pages/sport/sport",
+			"style": {
+				"navigationBarTitleText": "运动"
+			}
+		},
+		{
+			"path": "pages/sleep/sleep",
+			"style": {
+				"navigationBarTitleText": "睡眠"
+			}
+		},
+		{
+			"path": "pages/aihelper/aihelper",
+			"style": {
+				"navigationBarTitleText": "AI答疑助手"
+			}
+		},
+		{
+			"path": "pages/illnessinfo/illnessinfo",
+			"style": {
+				"navigationBarTitleText": "健康信息"
+			}
+		},
+		{
+			"path" : "pages/manual/manual",
+			"style" : 
+			{
+				"navigationBarTitleText" : "手动打卡"
+			}
+		},
+		{
+			"path" : "pages/imgUpload/imgUpload",
+			"style" : 
+			{
+				"navigationBarTitleText" : "图片上传"
+			}
+		}
+	],
+	"easycom": {
+	    "autoscan": true,
+	    "custom": {
+	      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+	    }
+	  },
+	"globalStyle": {
+		// 导航栏标题颜色及状态栏前景颜色，仅支持 black/white
+		"navigationBarTextStyle": "black",
+		// 导航栏标题文字内容
+		"navigationBarTitleText": "智康360",
+		// 导航栏背景颜色（同状态栏背景色）
+		"navigationBarBackgroundColor": "#71d017",
+		//  下拉显示出来的窗口的背景色
+		"backgroundColor": "#F8F8F8"
+	},
+	"usingComponents": {
+	    "uni-calendar": "@dcloudio/uni-ui/lib/uni-calendar/uni-calendar"
+	  },
+	"tabBar": {
+		"backgroundColor": "#fff",
+		"selectedColor": "#ffd100",
+		"color": "#666",
+		"list": [{
+				"iconPath": "/static/icons/body.png",
+				"selectedIconPath": "static/icons/body-active.png",
+				"text": "身体信息",
+				"pagePath": "pages/index/index"
+			},
+			{
+				"iconPath": "/static/icons/health.png",
+				"selectedIconPath": "static/icons/health-active.png",
+				"text": "健康管理",
+				"pagePath": "pages/health/health"
+			},
+			{
+				"iconPath": "/static/icons/blog.png",
+				"selectedIconPath": "static/icons/blog-active.png",
+				"text": "博客",
+				"pagePath": "pages/blog/blog"
+			},
+			{
+				"iconPath": "/static/icons/me.png",
+				"selectedIconPath": "static/icons/me-active.png",
+				"text": "个人信息",
+				"pagePath": "pages/me/me"
+			}
+		]
+	},
+	"uniIdRouter": {
+
+	},
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	}
+}

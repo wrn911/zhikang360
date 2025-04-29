@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ExerciseCheckinMapper">
+
+    <!-- 公共字段抽取 -->
+    <sql id="Base_Column_List">
+        exercise_id, exercise_name, exercise_category, calories_burn_rate
+    </sql>
+
+    <!-- 查询所有（可带条件） -->
+    <select id="selectAll" resultType="ExerciseCheckin">
+        select * from exercise_checkin
+        <where>
+            <if test="exerciseId != null">AND exercise_id = #{exerciseId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="checkinDate != null">AND Date(checkin_date) = #{checkinDate}</if>
+            <if test="createDate != null">AND Date(create_time) = #{createDate}</if>
+        </where>
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultType="ExerciseCheckin">
+        select * from exercise_checkin where checkin_id = #{id}
+    </select>
+
+    <select id="selectCheckinCounts" resultType="com.example.DAO.CheckinCountDTO">
+        SELECT
+        COUNT(CASE WHEN DATE(create_time) = CURRENT_DATE() THEN 1 END) AS today_count,
+        COUNT(CASE WHEN DATE(create_time) = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) THEN 1 END) AS yesterday_count
+        FROM exercise_checkin
+        WHERE user_id = #{userId} AND checkin_date IS NOT NULL
+    </select>
+
+<!--    根据时间查询-->
+    <select id="selectByTime" resultType="ExerciseCheckin">
+        select * from exercise_checkin
+        <where>
+            <if test="begin != null">
+                and create_time &lt;= #{end}
+            </if>
+            <if test="end != null">
+                and create_time &gt;= #{begin}
+            </if>
+        </where>
+    </select>
+
+    <!-- 删除 -->
+    <delete id="deleteById">
+        delete from exercise_checkin
+        where checkin_id = #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertBatch" useGeneratedKeys="true">
+        insert into exercise_checkin
+        (user_id, exercise_id, exercise_name, create_time, duration, calories_burned)
+        values
+        <foreach collection="list" item="it" separator=",">
+            (#{it.userId}, #{it.exerciseId}, #{it.exerciseName}, #{it.now}, #{it.duration}, #{it.caloriesBurned})
+        </foreach>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateById" parameterType="com.example.entity.ExerciseCheckin">
+        update exercise_checkin
+        <set>
+            <if test="feedback != null">feedback = #{feedback},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="caloriesBurned != null">calories_burned = #{caloriesBurned},</if>
+            <if test="checkinDate != null">checkin_date = #{checkinDate},</if>
+        </set>
+        where exercise_id = #{exerciseId} and to_days(create_time) = to_days(now());
+    </update>
+
+</mapper>

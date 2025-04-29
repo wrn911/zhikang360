@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.FoodRecommendMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap id="foodRecommendMap" type="com.example.entity.FoodRecommend">
+        <id property="recommendId" column="recommend_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="recommendType" column="recommend_type"/>
+        <result property="foodId" column="food_id"/>
+        <result property="foodName" column="food_name"/>
+        <result property="gramAte" column="gram_ate"/>
+        <result property="caloriesAte" column="calories_ate"/>
+        <result property="carbohydratesAte" column="carbohydrates_ate"/>
+        <result property="fatAte" column="fat_ate"/>
+        <result property="proteinAte" column="protein_ate"/>
+        <result property="fiberAte" column="fiber_ate"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <!-- 公共字段 -->
+    <sql id="Base_Column_List">
+        recommend_id, user_id, recommend_type, food_id, food_name,
+        gram_ate, calories_ate, carbohydrates_ate, fat_ate,
+        protein_ate, fiber_ate, create_time
+    </sql>
+
+    <!-- 插入记录（匹配接口@Options配置） -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="recommendId" keyColumn="recommend_id">
+        INSERT INTO food_recommend
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user_id, recommend_type, food_id, food_name,
+            <if test="gramAte != null">gram_ate,</if>
+            <if test="caloriesAte != null">calories_ate,</if>
+            <if test="carbohydratesAte != null">carbohydrates_ate,</if>
+            <if test="fatAte != null">fat_ate,</if>
+            <if test="proteinAte != null">protein_ate,</if>
+            <if test="fiberAte != null">fiber_ate,</if>
+            create_time
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{userId}, #{recommendType}, #{foodId}, #{foodName},
+            <if test="gramAte != null">#{gramAte},</if>
+            <if test="caloriesAte != null">#{caloriesAte},</if>
+            <if test="carbohydratesAte != null">#{carbohydratesAte},</if>
+            <if test="fatAte != null">#{fatAte},</if>
+            <if test="proteinAte != null">#{proteinAte},</if>
+            <if test="fiberAte != null">#{fiberAte},</if>
+            #{createTime}
+        </trim>
+    </insert>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="foodRecommendMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM food_recommend
+        WHERE recommend_id = #{recommendId}
+    </select>
+
+    <!-- 用户历史记录查询 -->
+    <select id="selectByUserId" resultMap="foodRecommendMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM food_recommend
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 按日期筛选查询 -->
+    <select id="selectByUserIdAndDate" resultMap="foodRecommendMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM food_recommend
+        WHERE user_id = #{userId}
+        AND create_time BETWEEN CONCAT(#{date}, ' 00:00:00')
+        AND CONCAT(#{date}, ' 23:59:59')
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 动态更新分量 -->
+    <update id="updatePortion">
+        UPDATE food_recommend
+        <set>
+            <if test="gramAte != null">gram_ate = #{gramAte},</if>
+            <if test="caloriesAte != null">calories_ate = #{caloriesAte},</if>
+        </set>
+        WHERE recommend_id = #{recommendId}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="deleteById">
+        DELETE FROM food_recommend
+        WHERE recommend_id = #{recommendId}
+    </delete>
+
+</mapper>

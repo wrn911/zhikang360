@@ -1,0 +1,123 @@
+
+status	0x1 Transaction mined and execution succeed
+transaction hash	0x6a08ca91ec3442b12b3b65f73717ea89b3a91831f29c1640ba63d7354446392a
+block hash	0x1b0831b2bcf1e9a5a537a26d1e5a4ab313da7865a90c9d7b84858e92120ab15d
+block number	3730918
+contract address	0x94589f02989f5ffb55dff5280bf213446da15aec
+from	0x3cc62ea2922ca9bf988fd91bf38dff7e3610072f
+to	NFTMarketplace.(constructor)
+gas	5000000 gas
+transaction cost	2778713 gas 
+input	0x608...40033
+decoded input	{}
+decoded output	 - 
+logs	[
+	{
+		"from": "0x94589f02989f5ffb55dff5280bf213446da15aec",
+		"topic": "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+		"event": "OwnershipTransferred",
+		"args": {
+			"0": "0x0000000000000000000000000000000000000000",
+			"1": "0x3cc62ea2922ca9bf988FD91Bf38Dff7e3610072F",
+			"previousOwner": "0x0000000000000000000000000000000000000000",
+			"newOwner": "0x3cc62ea2922ca9bf988FD91Bf38Dff7e3610072F"
+		}
+	}
+]
+raw logs	[
+  {
+    "address": "0x94589f02989f5ffb55dff5280bf213446da15aec",
+    "topics": [
+      "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "0x0000000000000000000000003cc62ea2922ca9bf988fd91bf38dff7e3610072f"
+    ],
+    "data": "0x",
+    "blockHash": "0x1b0831b2bcf1e9a5a537a26d1e5a4ab313da7865a90c9d7b84858e92120ab15d",
+    "blockNumber": "0x38ede6",
+    "transactionHash": "0x6a08ca91ec3442b12b3b65f73717ea89b3a91831f29c1640ba63d7354446392a",
+    "transactionIndex": "0x1f",
+    "logIndex": "0x99",
+    "removed": false
+  }
+]
+
+
+
+IPFS的cid。https://ipfs.io/ipfs/bafkreih6i5sryp6l5tig53axklkun7iaslbhvqry5amlpr76pszvard43y
+
+
+
+mint交易
+
+status	0x1 Transaction mined and execution succeed
+transaction hash	0x6dd35121aa0d8691b7b8627c4717294366ff18ecd921d75287f89b6b64e228fa
+block hash	0x18c5bf2a033c9fbef33773f28e3475836e853d52a91831979ee604f4bfcbb3d1
+block number	3730981
+from	0x3cc62ea2922ca9bf988fd91bf38dff7e3610072f
+to	NFTMarketplace.mintNFT(string) 0x94589f02989f5ffb55dff5280bf213446da15aec
+gas	19999999 gas
+transaction cost	221173 gas 
+input	0xfb3...00000
+decoded input	{
+	"string tokenURI": "https://ipfs.io/ipfs/bafkreih6i5sryp6l5tig53axklkun7iaslbhvqry5amlpr76pszvard43y"
+}
+decoded output	 - 
+logs	[
+	{
+		"from": "0x94589f02989f5ffb55dff5280bf213446da15aec",
+		"topic": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+		"event": "Transfer",
+		"args": {
+			"0": "0x0000000000000000000000000000000000000000",
+			"1": "0x3cc62ea2922ca9bf988FD91Bf38Dff7e3610072F",
+			"2": "5",
+			"from": "0x0000000000000000000000000000000000000000",
+			"to": "0x3cc62ea2922ca9bf988FD91Bf38Dff7e3610072F",
+			"tokenId": "5"
+		}
+	},
+	{
+		"from": "0x94589f02989f5ffb55dff5280bf213446da15aec",
+		"topic": "0x0176f203df400d7bd5f1b1c9ef36c16709bf3b5d9fd35f000a6bae32393f66c3",
+		"event": "NFTMinted",
+		"args": {
+			"0": "5",
+			"1": "0x3cc62ea2922ca9bf988FD91Bf38Dff7e3610072F",
+			"tokenId": "5",
+			"owner": "0x3cc62ea2922ca9bf988FD91Bf38Dff7e3610072F"
+		}
+	}
+]
+raw logs	[
+  {
+    "address": "0x94589f02989f5ffb55dff5280bf213446da15aec",
+    "topics": [
+      "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "0x0000000000000000000000003cc62ea2922ca9bf988fd91bf38dff7e3610072f",
+      "0x0000000000000000000000000000000000000000000000000000000000000005"
+    ],
+    "data": "0x",
+    "blockHash": "0x18c5bf2a033c9fbef33773f28e3475836e853d52a91831979ee604f4bfcbb3d1",
+    "blockNumber": "0x38ee25",
+    "transactionHash": "0x6dd35121aa0d8691b7b8627c4717294366ff18ecd921d75287f89b6b64e228fa",
+    "transactionIndex": "0xf",
+    "logIndex": "0x2b",
+    "removed": false
+  },
+  {
+    "address": "0x94589f02989f5ffb55dff5280bf213446da15aec",
+    "topics": [
+      "0x0176f203df400d7bd5f1b1c9ef36c16709bf3b5d9fd35f000a6bae32393f66c3",
+      "0x0000000000000000000000000000000000000000000000000000000000000005"
+    ],
+    "data": "0x0000000000000000000000003cc62ea2922ca9bf988fd91bf38dff7e3610072f",
+    "blockHash": "0x18c5bf2a033c9fbef33773f28e3475836e853d52a91831979ee604f4bfcbb3d1",
+    "blockNumber": "0x38ee25",
+    "transactionHash": "0x6dd35121aa0d8691b7b8627c4717294366ff18ecd921d75287f89b6b64e228fa",
+    "transactionIndex": "0xf",
+    "logIndex": "0x2c",
+    "removed": false
+  }
+]

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.PlayListMapper">
+
+    <!-- 播放列表字段映射 -->
+    <resultMap id="PlayListResultMap" type="com.example.entity.PlayList">
+        <id column="play_list_id" property="playListId" />
+        <result column="user_id" property="userId" />
+        <result column="if_now" property="ifNow" />
+    </resultMap>
+
+    <!-- 创建播放列表 -->
+    <insert id="insertPlayList" parameterType="com.example.entity.PlayList"
+            useGeneratedKeys="true" keyProperty="playListId">
+        INSERT INTO play_list (user_id, if_now)
+        VALUES (#{userId}, #{ifNow})
+    </insert>
+
+    <!-- 查询除当前播放列表外用户最近的历史播放列表 -->
+    <select id="selectByUserId" resultType="com.example.entity.PlayList">
+        SELECT
+        *
+        FROM
+        play_list
+        where if_now = 0 AND user_id = #{userId}
+        order by play_list_id desc
+        LIMIT 1
+    </select>
+
+    <!-- 查询当前播放列表 -->
+    <select id="selectNowByUserId" resultType="com.example.entity.PlayList">
+        SELECT
+        *
+        FROM
+        play_list
+        where if_now = 1 AND user_id = #{userId}
+    </select>
+
+</mapper>

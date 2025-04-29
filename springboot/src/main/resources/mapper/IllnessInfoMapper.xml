@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- IllnessInfoMapper.xml -->
+<mapper namespace="com.example.mapper.IllnessInfoMapper">
+    <sql id="Base_Column_List">
+        id, user_id, allergy_type, allergy_details,
+        chronic_diseases, health_issues, create_time, update_time
+    </sql>
+
+    <select id="selectByUserId" resultType="IllnessInfo">
+        SELECT <include refid="Base_Column_List"/>
+        FROM illness_info WHERE user_id=#{userId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO illness_info
+        (user_id, allergy_type, allergy_details, chronic_diseases, health_issues, create_time, update_time)
+        VALUES (#{userId}, #{allergyType}, #{allergyDetails},
+        #{chronicDiseases}, #{healthIssues}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateById">
+        UPDATE illness_info
+        <set>
+            <if test="allergyType != null">allergy_type=#{allergyType},</if>
+            <if test="allergyDetails != null">allergy_details=#{allergyDetails},</if>
+            <if test="chronicDiseases != null">chronic_diseases=#{chronicDiseases},</if>
+            <if test="healthIssues != null">health_issues=#{healthIssues},</if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        WHERE user_id=#{userId}
+    </update>
+</mapper>

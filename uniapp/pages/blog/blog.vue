@@ -362,7 +362,7 @@ export default {
 	/* 全局容器样式 */
 	.blog-container {
 		padding: 20rpx;
-		background-color: #f5f7f5;
+		background: linear-gradient(135deg, #f8fafc, #f1f5f9);
 		min-height: 100vh;
 	}
 	
@@ -370,9 +370,10 @@ export default {
 	.tab-section {
 		margin-bottom: 30rpx;
 		padding: 16rpx;
-		background-color: #fff;
-		border-radius: 16rpx;
-		box-shadow: 0 4rpx 16rpx rgba(76, 175, 80, 0.08);
+		background: linear-gradient(135deg, #ffffff, #fafbfc);
+		border-radius: 20rpx;
+		box-shadow: 0 8rpx 24rpx rgba(71, 85, 105, 0.08);
+		border: 1rpx solid rgba(226, 232, 240, 0.6);
 		animation: fadeIn 0.5s ease-in-out;
 	}
 	
@@ -383,17 +384,17 @@ export default {
 		z-index: 1;
 		animation: slideDown 0.4s ease-out;
 		padding: 16rpx;
-		background-color: #ffffff;
-		border-radius: 16rpx;
-		box-shadow: 0 8rpx 20rpx rgba(76, 175, 80, 0.15);
-		border: 2rpx solid rgba(76, 175, 80, 0.3);
+		background: linear-gradient(135deg, #ffffff, #fafbfc);
+		border-radius: 20rpx;
+		box-shadow: 0 8rpx 24rpx rgba(71, 85, 105, 0.08);
+		border: 1rpx solid rgba(226, 232, 240, 0.6);
 		transition: all 0.3s ease;
 	}
 	
 	.search-wrapper:hover {
 		transform: translateY(-2rpx);
-		box-shadow: 0 10rpx 25rpx rgba(76, 175, 80, 0.2);
-		border-color: rgba(76, 175, 80, 0.5);
+		box-shadow: 0 12rpx 32rpx rgba(71, 85, 105, 0.12);
+		border-color: rgba(59, 130, 246, 0.3);
 	}
 	
 	/* 自定义uni-search-bar样式 */
@@ -403,55 +404,57 @@ export default {
 	
 	.search-wrapper :deep(.uni-searchbar__box) {
 		height: 70rpx;
-		border: 1rpx solid rgba(76, 175, 80, 0.2);
-		background-color: #f0f8f0 !important;
+		border: 1rpx solid rgba(226, 232, 240, 0.6);
+		background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
+		border-radius: 16rpx;
 	}
 	
 	.search-wrapper :deep(.uni-searchbar__box-search-input) {
 		font-size: 30rpx;
-		color: #333;
+		color: #334155;
 	}
 	
 	.search-wrapper :deep(.uni-icons) {
-		color: #4CAF50 !important;
+		color: #3b82f6 !important;
 	}
 	
 	.search-wrapper :deep(.uni-searchbar__text-placeholder) {
 		font-size: 30rpx;
-		color: #999;
+		color: #94a3b8;
 	}
 	
 	.search-wrapper :deep(.uni-searchbar__cancel) {
-		color: #4CAF50;
+		color: #3b82f6;
 		font-size: 30rpx;
 	}
 	
 	/* 发布按钮区域 */
 	.post-box {
 		margin-bottom: 36rpx;
-		background: #fff;
+		background: linear-gradient(135deg, #ffffff, #fafbfc);
 		padding: 36rpx;
-		border-radius: 16rpx;
-		box-shadow: 0 8rpx 20rpx rgba(76, 175, 80, 0.1);
+		border-radius: 20rpx;
+		box-shadow: 0 8rpx 24rpx rgba(71, 85, 105, 0.08);
+		border: 1rpx solid rgba(226, 232, 240, 0.6);
 		transition: all 0.3s ease;
 	}
 	
 	.create-btn {
-		background: linear-gradient(135deg, #4CAF50, #2E7D32);
+		background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 		color: white;
 		font-weight: 600;
-		border-radius: 12rpx;
+		border-radius: 16rpx;
 		height: 88rpx;
 		line-height: 88rpx;
 		transition: all 0.3s ease;
-		box-shadow: 0 6rpx 12rpx rgba(76, 175, 80, 0.2);
+		box-shadow: 0 8rpx 20rpx rgba(59, 130, 246, 0.25);
 		letter-spacing: 2rpx;
 	}
 	
 	.create-btn:active {
-		background: linear-gradient(135deg, #3e8e41, #1b5e20);
+		background: linear-gradient(135deg, #2563eb, #1e40af);
 		transform: translateY(2rpx);
-		box-shadow: 0 2rpx 8rpx rgba(76, 175, 80, 0.15);
+		box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.2);
 	}
 
 	.title-input {
@@ -465,26 +468,27 @@ export default {
 	}
 
 	.list-container {
-		background: #f5f7f5;
+		background: linear-gradient(135deg, #f8fafc, #f1f5f9);
 		padding: 16rpx;
 		animation: fadeIn 0.5s ease-in-out;
 	}
 
 	/* 博客卡片样式 */
 	.post-item {
-		background: #fff;
+		background: linear-gradient(135deg, #ffffff, #fafbfc);
 		padding: 36rpx;
 		margin-bottom: 30rpx;
-		border-radius: 16rpx;
-		box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.06);
+		border-radius: 20rpx;
+		box-shadow: 0 8rpx 24rpx rgba(71, 85, 105, 0.08);
+		border: 1rpx solid rgba(226, 232, 240, 0.6);
 		transition: all 0.3s ease;
 		animation: fadeIn 0.5s ease-in-out;
 	}
 	
 	.post-item:active {
-		transform: translateY(4rpx);
-		box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.04);
-		background-color: #fafffe;
+		transform: translateY(2rpx);
+		box-shadow: 0 4rpx 12rpx rgba(71, 85, 105, 0.06);
+		background: linear-gradient(135deg, #f8fafc, #f1f5f9);
 	}
 	
 	/* 博客头部样式 */
@@ -494,17 +498,17 @@ export default {
 		align-items: center;
 		margin-bottom: 20rpx;
 		padding-bottom: 20rpx;
-		border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+		border-bottom: 1px solid rgba(226, 232, 240, 0.6);
 	}
 	
 	.username {
-		font-weight: bold;
-		color: #333;
+		font-weight: 600;
+		color: #1e293b;
 		font-size: 30rpx;
 	}
 	
 	.post-time {
-		color: #999;
+		color: #94a3b8;
 		font-size: 24rpx;
 	}
 	
@@ -521,16 +525,16 @@ export default {
 	
 	.post-title {
 		font-size: 34rpx;
-		font-weight: bold;
+		font-weight: 600;
 		margin-bottom: 16rpx;
-		color: #222;
+		color: #0f172a;
 		line-height: 1.4;
-		letter-spacing: 1rpx;
+		letter-spacing: 0.5rpx;
 	}
 	
 	.post-content {
 		font-size: 28rpx;
-		color: #666;
+		color: #475569;
 		line-height: 1.6;
 		margin-bottom: 16rpx;
 		display: -webkit-box;
@@ -546,10 +550,11 @@ export default {
 	.post-image {
 		width: 180rpx;
 		height: 180rpx;
-		border-radius: 12rpx;
+		border-radius: 16rpx;
 		object-fit: cover;
-		background-color: #f0f0f0;
-		box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+		background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+		box-shadow: 0 4rpx 12rpx rgba(71, 85, 105, 0.1);
+		border: 1rpx solid rgba(226, 232, 240, 0.6);
 		transition: transform 0.3s ease;
 	}
 	
@@ -563,7 +568,7 @@ export default {
 		align-items: center;
 		margin-top: 24rpx;
 		padding-top: 20rpx;
-		border-top: 1px solid rgba(76, 175, 80, 0.1);
+		border-top: 1px solid rgba(226, 232, 240, 0.6);
 		gap: 36rpx;
 	}
 	
@@ -574,47 +579,48 @@ export default {
 	.edit-btn, .comment-btn, .like-btn {
 		display: flex;
 		align-items: center;
-		padding: 10rpx 20rpx;
-		border-radius: 30rpx;
+		padding: 12rpx 24rpx;
+		border-radius: 20rpx;
 		font-size: 26rpx;
-		color: #555;
-		background-color: #f5f5f5;
+		color: #64748b;
+		background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+		border: 1rpx solid rgba(226, 232, 240, 0.6);
 		transition: all 0.3s ease;
-		box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+		box-shadow: 0 2rpx 8rpx rgba(71, 85, 105, 0.05);
 	}
 	
 	.edit-btn:active, .comment-btn:active, .like-btn:active {
-		background-color: #e8e8e8;
-		transform: translateY(2rpx);
-		box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.03);
+		background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+		transform: translateY(1rpx);
+		box-shadow: 0 1rpx 4rpx rgba(71, 85, 105, 0.08);
 	}
 	
 	.edit-btn {
-		color: #4CAF50;
-		background-color: rgba(76, 175, 80, 0.1);
-		border: 1rpx solid rgba(76, 175, 80, 0.2);
+		color: #3b82f6;
+		background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.05));
+		border: 1rpx solid rgba(59, 130, 246, 0.2);
 	}
 	
 	.liked {
-		color: #4CAF50;
-		background-color: rgba(76, 175, 80, 0.15);
-		border: 1rpx solid rgba(76, 175, 80, 0.3);
-		transform: scale(1.05);
-		font-weight: bold;
-		box-shadow: 0 4rpx 12rpx rgba(76, 175, 80, 0.2);
+		color: #ef4444;
+		background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+		border: 1rpx solid rgba(239, 68, 68, 0.2);
+		transform: scale(1.02);
+		font-weight: 600;
+		box-shadow: 0 4rpx 12rpx rgba(239, 68, 68, 0.15);
 	}
 	
 	.liked .icon {
-		transform: scale(1.2);
-		color: #FF5722;
+		transform: scale(1.1);
+		color: #ef4444;
 		transition: transform 0.2s ease;
 	}
 	
 	@keyframes likeAnimation {
 		0% { transform: scale(1); }
-		50% { transform: scale(1.3); }
-		75% { transform: scale(1.1); }
-		100% { transform: scale(1.2); }
+		50% { transform: scale(1.2); }
+		75% { transform: scale(1.05); }
+		100% { transform: scale(1.1); }
 	}
 	
 	.like-btn:active .icon {
@@ -624,16 +630,16 @@ export default {
 	/* 点赞动画效果 */
 	.liked .icon {
 		animation: likeAnimation 0.3s ease forwards;
-		color: #FF5722;
+		color: #ef4444;
 	}
 	
 	/* 点赞按钮悬停效果 */
 	.like-btn:hover {
-		background-color: #f0f0f0;
+		background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
 	}
 	
 	.liked:hover {
-		background-color: rgba(76, 175, 80, 0.2);
+		background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08));
 	}
 
 	.comment-input {

@@ -3,6 +3,7 @@ package com.example.service;
 import com.example.entity.Exercise;
 import com.example.entity.ExerciseCheckin;
 import com.example.entity.ExerciseRecommend;
+import com.example.entity.UserExerciseRecommendList;
 import com.github.pagehelper.PageInfo;
 
 import java.util.ArrayList;
@@ -49,6 +50,9 @@ public interface ExerciseService {
      * 删除
      */
     void deleteById(Integer id);
+
+    void generateRecommend();
+    List<UserExerciseRecommendList> GetUserExerciseRecommendList();
 
     /**
      * 批量删除

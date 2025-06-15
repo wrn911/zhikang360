@@ -8,6 +8,7 @@ import com.example.common.Constants;
 import com.example.common.enums.RoleEnum;
 import com.example.entity.Account;
 import com.example.service.AdminService;
+import com.example.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -28,13 +29,18 @@ public class TokenUtils {
     private static final Logger log = LoggerFactory.getLogger(TokenUtils.class);
 
     private static AdminService staticAdminService;
+    private static UserService staticUserService;
+
+    @Resource
+    UserService userService;
 
     @Resource
     AdminService adminService;
 
     @PostConstruct
-    public void setUserService() {
+    public void setServices() {
         staticAdminService = adminService;
+        staticUserService = userService;  // 添加这行
     }
 
     /**
@@ -65,6 +71,29 @@ public class TokenUtils {
             log.error("获取当前用户信息出错", e);
         }
         return new Account();  // 返回空的账号对象
+    }
+
+    /**
+     * 为指定用户生成token（用于系统内部调用）
+     */
+    public static String generateTokenForUser(Integer userId) {
+        try {
+            // 假设是USER角色，如果需要支持ADMIN，可以添加参数
+            String userRole = userId + "-" + RoleEnum.USER.name();
+
+            // 这里需要获取用户密码作为签名
+            // 你需要注入UserService
+            Account user = staticUserService.selectById(userId);
+            if (user != null && user.getPassword() != null) {
+                return createToken(userRole, user.getPassword());
+            } else {
+                log.error("无法为用户{}生成token：用户不存在或密码为空", userId);
+                return null;
+            }
+        } catch (Exception e) {
+            log.error("为用户{}生成token时出错", userId, e);
+            return null;
+        }
     }
 }
 

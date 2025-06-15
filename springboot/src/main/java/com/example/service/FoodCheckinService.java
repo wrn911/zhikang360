@@ -46,13 +46,14 @@ public class FoodCheckinService {
     private BadgeStandardMapper badgeStandardMapper;
 
 
-    public void blockChainLink(){
+    public void blockChainLink(int x){
         Process proc;
+        x=x-2;
         try {
             // 指定虚拟环境中的 Python 解释器路径
             // 指定虚拟环境中的 Python 解释器路径
-            String pythonExecutable = "C:\\Users\\Dell\\PycharmProjects\\pythonProject\\.venv\\Scripts\\python.exe";  // 7层上级目录
-            String scriptPath = "E:\\zhikang360\\pythonProject2\\main.py";  // 7层上级目录
+            String pythonExecutable = "E:\\ruanjian2\\anaconda\\envs\\NanoGPT\\python.exe";  // 7层上级目录
+            String scriptPath = "D:\\Java\\IdeaProjects\\zhikang360\\pythonProject2\\main"+x+".py";  // 7层上级目录
 
             // 运行 Python 脚本
             proc = Runtime.getRuntime().exec(pythonExecutable + " " + scriptPath);
@@ -108,7 +109,7 @@ public class FoodCheckinService {
                Integer badgeId = badgeStandardMapper.selectIdByTypeAndDays(BadgeStandardTypeEnum.饮食打卡天数.name(),medalDay);
                MyBadge myBadge = new MyBadge(userId, badgeId, true);
                badgeStandardMapper.insertPersonBadge(myBadge);
-                blockChainLink();
+                blockChainLink(badgeId);
             }
         }
 
@@ -130,7 +131,7 @@ public class FoodCheckinService {
                 Integer badgeId = badgeStandardMapper.selectIdByTypeAndDays(BadgeStandardTypeEnum.饮食连续打卡天数.name(), medalDay);
                 MyBadge myBadge = new MyBadge(userId, badgeId, true);
                 badgeStandardMapper.insertPersonBadge(myBadge);
-                blockChainLink();
+                blockChainLink(badgeId);
             }
         }
 
@@ -156,7 +157,7 @@ public class FoodCheckinService {
             Integer badgeId = badgeStandardMapper.selectIdByTypeAndDays(BadgeStandardTypeEnum.饮食记录摄入.name(), medalDay);
             MyBadge myBadge = new MyBadge(userId, badgeId, true);
             badgeStandardMapper.insertPersonBadge(myBadge);
-            blockChainLink();
+            blockChainLink(badgeId);
         }
 
         userBasicInfoMapper.updateCheckInfo(userCheckInfo);

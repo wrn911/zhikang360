@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data // Lombok 注解
 public class FoodInfoDAO {
+    private String aim;
 
     // 饮食偏好（合并前端预设选项和自定义输入）
     private List<String> preferences;

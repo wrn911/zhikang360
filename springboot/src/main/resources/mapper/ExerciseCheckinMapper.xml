@@ -74,4 +74,104 @@
         where exercise_id = #{exerciseId} and to_days(create_time) = to_days(now());
     </update>
 
+    <select id="selectByCategory" resultType="com.example.entity.UserExerciseRecommendList">
+        SELECT *
+        FROM user_exercise_recommend_list
+        WHERE user_id = #{userId}
+        AND exercise_category = #{exercise_category}
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectTodayRecommendedExercises" resultType="com.example.entity.UserExerciseRecommendList">
+        SELECT uerl.*
+        FROM user_exercise_recommend_list uerl
+        WHERE uerl.user_id = #{userId}
+        AND uerl.exercise_id IN (
+        SELECT er.exercise_id
+        FROM exercise_checkin er
+        WHERE er.user_id = #{userId}
+        AND DATE(er.create_time) = #{today}
+        )
+    </select>
+
+    <select id="selectUserExerciseRecommendListById" resultType="com.example.entity.UserExerciseRecommendList">
+        SELECT *
+        FROM user_exercise_recommend_list
+        WHERE id = #{id}
+    </select>
+
+
+    <update id="updateWeight">
+        UPDATE user_exercise_recommend_list
+        <set>
+            <if test="weight != null">weight = #{weight},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 按日期筛选查询 -->
+    <select id="selectByUserIdAndDate" resultType="ExerciseCheckin">
+        SELECT *
+        FROM exercise_checkin
+        WHERE user_id = #{userId}
+        AND create_time BETWEEN CONCAT(#{date}, ' 00:00:00')
+        AND CONCAT(#{date}, ' 23:59:59')
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectTodayUncheckinByUser" resultType="com.example.entity.ExerciseCheckin">
+        SELECT *
+        FROM exercise_checkin
+        WHERE user_id = #{userId}
+        AND checkin_date IS NULL
+        AND DATE(create_time) = #{today}
+    </select>
+
+    <insert id="insert" parameterType="com.example.entity.ExerciseCheckin" useGeneratedKeys="true" keyProperty="checkinId">
+        INSERT INTO exercise_checkin (
+        user_id,
+        checkin_date,
+        exercise_id,
+        exercise_name,
+        duration,
+        calories_burned,
+        additional_info,
+        create_time,
+        feedback
+        ) VALUES (
+        #{userId},
+        #{checkinDate},
+        #{exerciseId},
+        #{exerciseName},
+        #{duration},
+        #{caloriesBurned},
+        #{additionalInfo},
+        #{createTime},
+        #{feedback}
+        )
+    </insert>
+
+    <insert id="insertUserExerciseRecommendFromTemplate">
+        INSERT INTO user_exercise_recommend_list (
+        user_id,
+        exercise_recommend_list_id,
+        exercise_id,
+        exercise_name,
+        exercise_category,
+        calories_burn_rate,
+        weight
+        )
+        SELECT
+        #{userId},
+        erl.id,
+        erl.exercise_id,
+        erl.exercise_name,
+        erl.exercise_category,
+        erl.calories_burn_rate,
+        erl.weight
+        FROM exercise_recommend_list erl
+    </insert>
+
+
+
 </mapper>

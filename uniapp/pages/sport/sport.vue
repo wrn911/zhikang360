@@ -6,6 +6,9 @@
 		
 		<!-- 运动计划 -->
 		<scroll-view v-if="tab ===0" scroll-y>
+			<view class="generate-button-wrapper">
+			  <button class="generate-button" @click="generateRecommend">🎯 生成推荐运动</button>
+			</view>
 			<view class="card calories-card">
 				<view class="calories-content">
 					<view class="calories-label">推荐运动消耗卡路里数</view>
@@ -35,14 +38,14 @@
 					</view>
 				</view>
 			</view>
-			<u-button @click="showAddSportPacker=true" icon="plus" type="success" style="border-radius: 50%; position: fixed; bottom: 15vw; right:6vw; width: 12vw; height: 12vw;"/>
+			<u-button @click="goToSport2" icon="plus" type="success" style="border-radius: 50%; position: fixed; bottom: 15vw; right:6vw; width: 12vw; height: 12vw;"/>
 		</scroll-view>
 		<u-picker :show="showSportPacker" ref="uPicker" :columns="columns" @confirm="confirm" @change="changeHandler" @cancel="showSportPacker=false"></u-picker>
 		<u-popup :show="showAddSportPacker" @close="showAddSportPacker=false" zIndex="10074" :round="16">
 		    <view class="popup-container">
 				<view class="popup-header">
 					<view class="popup-title">请添加运动计划</view>
-					<view class="popup-subtitle">选择运动类型和时长</view>
+					<view class="popup-subtitle">选择运动类型和时长</view>T
 				</view>
 				<view class="add-sport-form">
 					<view class="form-item">
@@ -227,6 +230,14 @@ export default {
 			tab: 0 ,
 			chartTitle: "运动完成率" ,
 			recommendCalories: 600,
+			userRecommendInfo: {
+				userId: null,
+				foodCalories: '',
+				exerciseCalories: '',
+				sleepTimeStart: '',
+				sleepTimeEnd: '',
+				sleepTimeInmid: '',
+			},
 			recommendSports: [],
 			show: false,
 			checkinId: 0,//需要打卡的id
@@ -262,8 +273,39 @@ export default {
 		}
 	},
 	methods: {
+		goToSport2() {
+		  uni.navigateTo({
+		    url: '/pages/sport/sportCheckIn' // 注意路径是否正确
+		  });
+		},
 		sectionChange(index) {
 			this.tab = index;
+		},
+		getUserRecommendInfo(){
+			console.log('获取用户推荐基本信息列表');
+			http.request({
+			      url: '/user-basic-info/recommend/select',
+			      method: 'GET',
+			}).then((res) => {
+			  if (res.code === '200') {
+					this.userRecommendInfo = res.data;
+					console.log("用户推荐基本信息" + this.userRecommendInfo.exerciseCalories);
+					this.recommendCalories = this.userRecommendInfo.exerciseCalories;
+					console.log("用户推荐卡路里消耗" + this.recommendCalories);
+			  } else {
+			    uni.showToast({
+			      title: '获取用户推荐基本信息列表失败',
+			      icon: 'none'
+			    });
+			  }
+			}).catch(err => {
+			  console.error('获取用户推荐基本信息列表失败', err);
+			  uni.showToast({
+			    title: '网络错误，请稍后重试',
+			    icon: 'none'
+			  });
+			});
+			
 		},
 		//获取推荐运动
 		getRecommend(){
@@ -292,6 +334,27 @@ export default {
 			  });
 			});
 		},
+		// 生成推荐记录
+		  generateRecommend() {
+		    uni.showLoading({ title: '加载中...' });
+		    
+		    http.request({
+		      url: '/exercise//generate_recommend',
+		      method: 'POST'
+		    }).then(res => {
+		      uni.hideLoading();
+		      if (res.code === '200') {
+		          uni.showToast({ title: res.message || '生成成功', icon: 'success' });
+		          this.getRecommend(); // 刷新列表
+		      } else {
+		          uni.showToast({ title: res.message || '生成失败', icon: 'none' });
+		      }
+		    }).catch(err => {
+		      uni.hideLoading();
+		      console.error('请求异常:', err);
+		      uni.showToast({ title: '网络异常', icon: 'none' });
+		    });
+		  },
 		//打卡
 		checkin(e){
 			const values = e.detail.value;
@@ -539,14 +602,40 @@ export default {
 	},
 	created() {
 		this.getExerciseList();
+		this.getUserRecommendInfo();
 		this.getRecommend();
 		this.getHistory();
+	},
+	onShow() {
+	  this.refreshData();
 	},
 	
 }
 </script>
 
 <style>
+	
+.generate-button-wrapper {
+  padding: 0 24rpx;
+  margin-top: 16rpx;
+}
+
+
+.generate-button {
+  display: inline-block;
+  background-color: #4CAF50;
+  color: white;
+  padding: 12rpx 28rpx;
+  font-size: 26rpx;
+  border-radius: 10rpx;
+  border: none;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+.generate-button:hover {
+  transform: scale(1.03);
+  background-color: #45a049;
+}
 .card {
     background-color: white;
     border-radius: 16px;

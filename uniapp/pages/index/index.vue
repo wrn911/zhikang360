@@ -1,13 +1,17 @@
 <template>
   <view class="container">
+    <!-- 页面标题
+    <view class="page-header">
+      <text class="page-title">健康数据</text>
+      <text class="page-subtitle">您的健康状况一目了然</text>
+    </view> -->
+    
     <!-- 轮播图 -->
-    <swiper class="swiper" :autoplay="true" :interval="3000" :circular="true">
+    <swiper class="swiper" :autoplay="true" :interval="3000" :circular="true" indicator-dots indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#4CAF50">
       <swiper-item v-for="(item, index) in swiperList" :key="index">
         <image :src="item.imgUrl" mode="scaleToFill" class="swiper-img" />
       </swiper-item>
     </swiper>
-	
-	<view style="height: 30rpx;"></view> <!-- 换行间隙 -->
 
     <!-- 健康数据卡片 -->
     <view class="health-cards">
@@ -15,68 +19,22 @@
         v-for="(item, index) in healthData" 
         :key="index"
         class="card"
-        :style="{backgroundColor: item.color}"
       >
-        <text class="card-title">{{ item.title }}</text>
-        <text class="card-value">{{ item.value }}{{ item.unit }}</text>
-        <text class="card-time">更新于 {{ item.updateTime }}</text>
-      </view>
-    </view>
-
-    <!-- 底部导航 -->
-    <view class="bottom-nav">
-      <view class="nav-item" @click="openPopup">
-        <image src="/static/icons/shengaotizhong.png" class="nav-icon" />
-        <text>手动记录</text>
-      </view>
-      
-      <navigator 
-        url="/pages/index/scale" 
-        class="nav-item"
-        hover-class="nav-item-hover"
-      >
-        <image src="/static/icons/weightScale.png" class="nav-icon" />
-        <text>智能秤测量</text>
-      </navigator>
-      
-      <navigator 
-        url="/pages/index/create" 
-        class="nav-item"
-        hover-class="nav-item-hover"
-      >
-        <image src="/static/icons/aiPlan.png" class="nav-icon" />
-        <text>生成健康规划</text>
-      </navigator>
-    </view>
-
-    <!-- 录入弹窗 -->
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog 
-        mode="base" 
-        title="手动录入健康数据"
-        @confirm="submitData"
-        @close="closePopup"
-      >
-        <view class="input-group">
-          <view class="input-item">
-            <text class="label">身高(cm)</text>
-            <input v-model="inputData.height" type="number" placeholder="请输入身高" />
-          </view>
-          <view class="input-item">
-            <text class="label">体重(kg)</text>
-            <input v-model="inputData.weight" type="number" placeholder="请输入体重" />
-          </view>
-          <view class="input-item">
-            <text class="label">血压(mmHg)</text>
-            <input v-model="inputData.bloodPressure" placeholder="格式：120/80" />
-          </view>
-          <view class="input-item">
-            <text class="label">血糖(mmol/L)</text>
-            <input v-model="inputData.bloodSugar" type="number" step="0.1" placeholder="请输入血糖值" />
-          </view>
+        <view class="card-icon" :class="`icon-${index}`">
+          <text class="icon-text">{{ item.title.charAt(0) }}</text>
         </view>
-      </uni-popup-dialog>
-    </uni-popup>
+        <view class="card-content">
+          <text class="card-title">{{ item.title }}</text>
+          <text class="card-value">{{ item.value }}{{ item.unit }}</text>
+          <text class="card-time">更新于 {{ item.updateTime }}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 页面底部装饰 -->
+    <view class="page-footer">
+      <text class="footer-text">智康360 - 您的健康数据中心</text>
+    </view>
   </view>
 </template>
 
@@ -99,13 +57,7 @@ export default {
         { title: '体重', value: '-', unit: 'kg', color: '#bbdefb', updateTime: '-' },
         { title: '血压', value: '-', unit: 'mmHg', color: '#ffccbc', updateTime: '-' },
         { title: '血糖', value: '-', unit: 'mmol/L', color: '#e1bee7', updateTime: '-' }
-      ],
-      inputData: {
-        height: '',
-        weight: '',
-        bloodPressure: '',
-        bloodSugar: ''
-      }
+      ]
     }
   },
 
@@ -166,61 +118,7 @@ export default {
       }
     },
 
-    // 修改后的submitData方法
-        async submitData() {
-          if (!this.validateForm()) return
-    
-          try {
-            // 添加用户ID参数
-            const payload = {
-              ...this.inputData,
-              userId: this.user.id
-            }
-    
-            const res = await this.$request.put('/user-basic-info/update', payload)
-    
-            if (res.code === '200') {
-              uni.showToast({ title: '更新成功' })
-              await this.loadHealthData()  // 确保刷新数据
-              this.closePopup()
-            }
-          } catch (error) {
-            uni.showToast({ title: '更新失败', icon: 'none' })
-          }
-        },
 
-    // 增强表单验证
-        validateForm() {
-          const validations = [
-            {
-              field: 'height',
-              regex: /^\d{2,3}(\.\d{1,2})?$/,
-              message: '身高应为100-250cm之间的数字'
-            },
-            {
-              field: 'weight',
-              regex: /^\d{2,3}(\.\d{1,2})?$/,
-              message: '体重格式不正确'
-            },
-            {
-              field: 'bloodPressure',
-              regex: /^\d{1,3}\/\d{1,3}$/,
-              message: '血压格式应为120/80'
-            },
-            {
-              field: 'bloodSugar',
-              regex: /^\d{1,2}(\.\d{1,2})?$/,
-              message: '血糖值应在0.1-30之间'
-            }
-          ]
-		  return validations.every(({ field, regex, message }) => {
-		          const isValid = regex.test(this.inputData[field])
-		          if (!isValid) {
-		            uni.showToast({ title: message, icon: 'none' })
-		          }
-		          return isValid
-		  })
-		  },
 
     /*formatTime(timestamp) {
       if (!timestamp) return '-'
@@ -240,119 +138,133 @@ export default {
 	    ${pad(date.getHours())}:${pad(date.getMinutes())}
 	  `.replace(/\s+/g, ' ') // 压缩多余空格
 	},
-	async openPopup() {
-	  try {
-		// 从healthData提取现有值填充表单
-		await this.loadHealthData()
-		console.log(this.healthData)
-		this.healthData.forEach(item => {
-		  const rawValue = item.value === '暂无' ? '' : String(item.value)
-		  switch(item.title) {
-			case '身高':
-			  this.inputData.height = rawValue.replace('cm', '')
-			  break
-			case '体重':
-			  this.inputData.weight = rawValue.replace('kg', '')
-			  break
-			case '血压':
-			  this.inputData.bloodPressure = rawValue.replace('mmHg', '')
-			  break
-			case '血糖':
-			  this.inputData.bloodSugar = rawValue.replace('mmol/L', '')
-			  break
-		  }
-		})
-		
-		this.$refs.popup.open()
-	  } catch (error) {
-		uni.showToast({ title: '数据加载失败', icon: 'none' })
-	  }
-	},
-    // 修改关闭弹窗方法
-    closePopup() {
-        this.$refs.popup.close()
-    }
+
   }
 }
 </script>
 
 <style lang="scss">
 .container {
-  padding: 20rpx;
+  padding: 30rpx;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
 }
 
+/* 页面标题 */
+.page-header {
+  margin-bottom: 30rpx;
+  
+  .page-title {
+    font-size: 48rpx;
+    font-weight: bold;
+    color: #4CAF50;
+    display: block;
+    margin-bottom: 10rpx;
+  }
+  
+  .page-subtitle {
+    font-size: 28rpx;
+    color: #666;
+    display: block;
+  }
+}
+
+/* 轮播图 */
 .swiper {
   height: 350rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 24rpx rgba(71, 85, 105, 0.12);
+  margin-bottom: 40rpx;
+  border: 1rpx solid rgba(226, 232, 240, 0.6);
+  
   &-img {
     width: 100%;
     height: 100%;
-    border-radius: 16rpx;
   }
 }
 
+/* 健康数据卡片 */
 .health-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20rpx;
-  .card {
-    padding: 30rpx;
-    border-radius: 16rpx;
-    &-title {
-      display: block;
-      font-size: 28rpx;
-      color: #666;
-    }
-    &-value {
-      display: block;
-      font-size: 40rpx;
-      font-weight: bold;
-      margin: 15rpx 0;
-    }
-    &-time {
-      font-size: 24rpx;
-      color: #999;
-    }
-  }
-}
-
-.bottom-nav {
   display: flex;
-  justify-content: space-around;
-  margin-top: 50rpx;
-  .nav-item {
+  flex-direction: column;
+  gap: 24rpx;
+  margin-bottom: 40rpx;
+  
+  .card {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 20rpx 40rpx;
-    border-radius: 12rpx;
-    background-color: #f5f5f5;
-    &-hover {
-      background-color: #e0e0e0;
+    padding: 36rpx;
+    border-radius: 24rpx;
+    background: linear-gradient(135deg, #ffffff, #fafbfc);
+    box-shadow: 0 8rpx 24rpx rgba(71, 85, 105, 0.08);
+    border: 1rpx solid rgba(226, 232, 240, 0.6);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:active {
+      transform: translateY(1rpx) scale(0.99);
+      box-shadow: 0 4rpx 12rpx rgba(71, 85, 105, 0.12);
     }
-    .nav-icon {
-      width: 60rpx;
-      height: 60rpx;
-      margin-bottom: 15rpx;
+    
+    .card-icon {
+      width: 88rpx;
+      height: 88rpx;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 28rpx;
+      box-shadow: 0 4rpx 16rpx rgba(71, 85, 105, 0.15);
+      
+      .icon-text {
+        color: white;
+        font-size: 34rpx;
+        font-weight: 600;
+      }
+    }
+    
+    .icon-0 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } /* 身高 */
+    .icon-1 { background: linear-gradient(135deg, #10b981, #059669); } /* 体重 */
+    .icon-2 { background: linear-gradient(135deg, #f59e0b, #d97706); } /* 血压 */
+    .icon-3 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); } /* 血糖 */
+    
+    .card-content {
+      flex: 1;
+    }
+    
+    .card-title {
+      display: block;
+      font-size: 28rpx;
+      color: #1e293b;
+      font-weight: 500;
+    }
+    
+    .card-value {
+      display: block;
+      font-size: 42rpx;
+      font-weight: 600;
+      margin: 12rpx 0 8rpx 0;
+      color: #0f172a;
+    }
+    
+    .card-time {
+      font-size: 24rpx;
+      color: #94a3b8;
     }
   }
 }
 
-.input-group {
-  padding: 20rpx;
-  .input-item {
-    margin-bottom: 30rpx;
-    .label {
-      font-size: 28rpx;
-      color: #666;
-      margin-bottom: 10rpx;
-    }
-    input {
-      height: 80rpx;
-      padding: 0 20rpx;
-      border: 1rpx solid #eee;
-      border-radius: 8rpx;
-      font-size: 28rpx;
-    }
+/* 页面底部装饰 */
+.page-footer {
+  margin-top: 60rpx;
+  padding: 40rpx 0;
+  text-align: center;
+  
+  .footer-text {
+    font-size: 28rpx;
+    color: #94a3b8;
+    font-weight: 500;
+    opacity: 0.9;
   }
 }
 </style>

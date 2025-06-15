@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.DAO.MusicDTO;
 import com.example.DAO.PlayListMusicWithPlayListDAO;
 import com.example.common.Result;
 import com.example.entity.*;
@@ -76,7 +77,7 @@ public class MusicService {
     }
 
     // 新加音乐至播放列表
-    public int addToPlaylist(Music music) {
+    public int addToPlaylist(MusicDTO music) {
         Long userId = BaseContext.getCurrentId();
         PlayList nowPlayList = playListMapper.selectNowByUserId(userId);
         Integer nowPlayListId = nowPlayList.getPlayListId();
@@ -89,7 +90,7 @@ public class MusicService {
             playListMusic.setId(null);
             playListMusic.setMusicUrl(music.getMusicUrl());
             playListMusic.setMusicId(music.getMusicId());
-            playListMusic.setIfNow(false);
+            playListMusic.setIfNow(true);
         }else{
             Integer nowLocation = playListMusic.getLocation();
             for(PlayListMusic plm : playListMusics){
@@ -104,6 +105,7 @@ public class MusicService {
             playListMusic.setMusicId(music.getMusicId());
             playListMusic.setIfNow(false);
         }
+        playListMusic.setUserId(userId);
         return playListMusicMapper.insertPlayListMusic(playListMusic);
     }
 
@@ -223,6 +225,23 @@ public class MusicService {
             return playListMapper.insertPlayList(playList);
         }else{
             return 1;
+        }
+    }
+
+    public void changeIfNow(MusicDTO musicDTO) {
+        Long userId = BaseContext.getCurrentId();
+        PlayList nowPlayList = playListMapper.selectNowByUserId(userId);
+        Integer nowPlayListId = nowPlayList.getPlayListId();
+        List<PlayListMusic> playListMusics = playListMusicMapper.selectNowPlayListMusic(userId);
+        PlayListMusic playListMusic = playListMusicMapper.selectNowLocation(userId);
+        playListMusic.setIfNow(false);
+        playListMusicMapper.updatePlayListMusics(playListMusic);
+        int location = musicDTO.getCurrentSong().getLocation();
+        for(PlayListMusic plm : playListMusics){
+            if(plm.getLocation() == location){
+                plm.setIfNow(true);
+                playListMusicMapper.updatePlayListMusics(plm);
+            }
         }
     }
 }

@@ -1,0 +1,20 @@
+(rn) root@f2b033c18a08:~# accelerate config
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------In which compute environment are you running?
+This machine                                                                                                                                                               
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------Which type of machine are you using?
+multi-GPU                                                                                                                                                                  
+How many different machines will you use (use more than 1 for multi-node training)? [1]: 1                                                                                 
+Should distributed operations be checked while running for errors? This can avoid timeout issues but will be slower. [yes/NO]: yes                                         
+Do you wish to optimize your script with torch dynamo?[yes/NO]:yes                                                                                                         
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------Which dynamo backend would you like to use?                                                                                                                                                                       
+inductor                                                                                                                                                                   
+Do you want to customize the defaults sent to torch.compile? [yes/NO]: no                                                                                                  
+Do you want to use DeepSpeed? [yes/NO]:                                                                                                                                    
+Do you want to use FullyShardedDataParallel? [yes/NO]:                                                                                                                     
+Do you want to use Megatron-LM ? [yes/NO]: no                                                                                                                              
+How many GPU(s) should be used for distributed training? [1]:4                                                                                                             
+What GPU(s) (by id) should be used for training on this machine as a comma-seperated list? [all]:1,2,3                                                                     
+Would you like to enable numa efficiency? (Currently only supported on NVIDIA hardware). [yes/NO]: yes                                                                     
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------Do you wish to use mixed precision?
+bf16                                                                                                                                                                       
+accelerate configuration saved at /root/.cache/huggingface/accelerate/default_config.yaml       

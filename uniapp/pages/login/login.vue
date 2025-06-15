@@ -1,8 +1,16 @@
 <template>
-  <view style="padding: 40rpx;">
-    <view style="padding: 20rpx; margin: 80rpx 0; background-color: #fff; box-shadow: 0 2rpx 10rpx rgba(0,0,0,.1); border-radius: 10rpx;">
-      <view style="margin: 50rpx 30rpx; font-size: 40rpx;">欢迎登录</view>
-      <uni-forms ref="form" :modelValue="form" :rules="rules" validateTrigger='blur'>
+  <view class="container">
+    <view class="header">
+      <view class="logo-container">
+        <view class="logo">智康360</view>
+      </view>
+    </view>
+    
+    <view class="form-container">
+      <view class="title">欢迎登录</view>
+      <view class="subtitle">健康生活，从智康开始</view>
+      
+      <uni-forms ref="form" :modelValue="form" :rules="rules" validateTrigger="blur">
         <!-- 动态切换账号/手机号输入 -->
         <uni-forms-item v-if="!seen" name="phone" required>
           <uni-easyinput prefixIcon="phone" v-model="form.phone" placeholder="请输入手机号" />
@@ -18,87 +26,49 @@
 
         <!-- 验证码 -->
         <uni-forms-item name="captcha" required>
-          <view style="display: flex; align-items: center;">
-            <uni-easyinput 
-              prefixIcon="star-filled" 
-              v-model="form.captcha" 
-              placeholder="请输入验证码" 
+          <view class="captcha-container">
+            <uni-easyinput
+              prefixIcon="star-filled"
+              v-model="form.captcha"
+              placeholder="请输入验证码"
               style="flex: 1;"
             />
-            <view 
-              @click="generateCaptcha" 
+            <view
+              @click="generateCaptcha"
               :style="`
-                margin-left: 20rpx; 
-                padding: 10rpx 30rpx; 
-                border-radius: 16rpx; 
-                font-size: 36rpx; 
-                letter-spacing: 8rpx; 
-                position: relative;
                 background: linear-gradient(45deg, ${color1}, ${color2});
-                transform: rotate(${rotate}deg);
-                color: #fff;
-                text-shadow: 2rpx 2rpx 4rpx rgba(0,0,0,.2);
-                box-shadow: 0 4rpx 12rpx rgba(0,0,0,.1);
               `"
+              class="captcha-code"
             >
-              <!-- 验证码文字 -->
-              <view style="position: relative; z-index: 1;">{{ displayCode }}</view>
-              
-              <!-- 背景干扰元素 -->
-              <view 
-                style="
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  right: 0;
-                  bottom: 0;
-                  background: repeating-linear-gradient(
-                    -45deg,
-                    transparent,
-                    transparent 10rpx,
-                    rgba(255,255,255,.3) 10rpx,
-                    rgba(255,255,255,.3) 20rpx
-                  );
-                  mix-blend-mode: overlay;
-                "
-              ></view>
-              
-              <!-- 模糊滤镜 -->
-              <view 
-                style="
-                  position: absolute;
-                  top: -10rpx;
-                  left: -10rpx;
-                  right: -10rpx;
-                  bottom: -10rpx;
-                  backdrop-filter: blur(4rpx);
-                  z-index: 0;
-                "
-              ></view>
+              <view class="captcha-text">{{ displayCode }}</view>
             </view>
           </view>
         </uni-forms-item>
 
         <!-- 登录按钮 -->
-        <uni-forms-item>
-          <button @click="login()" style="background-color: #71d017; border-color: #71d017; height: 70rpx; line-height: 70rpx;">登 录</button>
+        <uni-forms-item class="login-button-container">
+          <button @click="login()" class="login-button">登 录</button>
         </uni-forms-item>
 
         <!-- 注册导航 -->
-        <uni-forms-item>
-          <view style="text-align: right;">
-            还没有账号？去 
-            <navigator style="display: inline-block; color: dodgerblue; margin-left: 4rpx;" url="/pages/register/register">注册</navigator>
+        <uni-forms-item class="register-navigation">
+          <view class="register-text">
+            还没有账号？
+            <navigator url="/pages/register/register" class="register-link">立即注册</navigator>
           </view>
         </uni-forms-item>
 
         <!-- 切换登录方式 -->
         <uni-forms-item>
-          <button class="switch-login-btn" @click="onchange()" hover-class="none">
+          <button class="switch-login-btn" @click="onchange()">
             {{ seen ? '使用手机号登录' : '使用账号登录' }}
           </button>
         </uni-forms-item>
       </uni-forms>
+    </view>
+    
+    <view class="footer">
+      <text>© 2023 智康360 - 您的健康管家</text>
     </view>
   </view>
 </template>
@@ -114,10 +84,10 @@ export default {
       rules: {},
       seen: true,
       captchaCode: '',
-      color1: '#FF6B6B',
-      color2: '#4ECDC4',
+      color1: '#4CAF50',
+      color2: '#8BC34A',
       rotate: -5,
-      displayCode: '' // 新增显示用验证码字段
+      displayCode: ''
     }
   },
   watch: {
@@ -175,8 +145,8 @@ export default {
     generateCaptcha() {
       const code = Math.floor(Math.random() * 9000 + 1000).toString()
       
-      this.color1 = `hsl(${Math.random() * 360}, 70%, 60%)`
-      this.color2 = `hsl(${Math.random() * 360}, 70%, 60%)`
+      this.color1 = `#4CAF50`
+      this.color2 = `#8BC34A`
       this.rotate = (Math.random() * 15 - 7).toFixed(1)
       
       const letters = code.split('')
@@ -244,18 +214,202 @@ export default {
 </script>
 
 <style>
+/* 全局样式 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  padding: 0;
+  background: linear-gradient(to bottom, #f8f9fa, #e9f2ef);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 头部样式 */
+.header {
+  padding: 60rpx 40rpx 20rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-container {
+  text-align: center;
+}
+
+.logo {
+  font-size: 60rpx;
+  font-weight: bold;
+  color: #4CAF50;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+  letter-spacing: 4rpx;
+}
+
+/* 表单容器 */
+.form-container {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 30rpx 30rpx 0 0;
+  box-shadow: 0 -10rpx 30rpx rgba(0, 0, 0, 0.05);
+  padding: 60rpx 40rpx;
+  margin-top: 40rpx;
+}
+
+.title {
+  text-align: center;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 60rpx;
+}
+
+/* 表单样式 */
+uni-forms {
+  width: 100%;
+}
+
+/* 输入框样式调整 */
+uni-forms-item {
+  margin-bottom: 30rpx;
+}
+
+uni-easyinput {
+  width: 100%;
+  background-color: #f9f9f9;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  box-shadow: inset 0 2rpx 5rpx rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* 验证码样式 */
+.captcha-container {
+  display: flex;
+  align-items: center;
+}
+
+.captcha-code {
+  margin-left: 20rpx;
+  padding: 10rpx 30rpx;
+  border-radius: 16rpx;
+  font-size: 36rpx;
+  letter-spacing: 8rpx;
+  position: relative;
+  color: #fff;
+  text-shadow: 1rpx 1rpx 2rpx rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  min-width: 160rpx;
+  height: 80rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.captcha-code:active {
+  transform: scale(0.98);
+}
+
+.captcha-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* 登录按钮样式 */
+.login-button-container {
+  margin-top: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+.login-button {
+  width: 100%;
+  height: 90rpx;
+  line-height: 90rpx;
+  background: linear-gradient(45deg, #4CAF50, #8BC34A);
+  border: none;
+  border-radius: 45rpx;
+  font-size: 36rpx;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 8rpx 20rpx rgba(76, 175, 80, 0.3);
+  transition: all 0.3s ease;
+}
+
+.login-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 10rpx rgba(76, 175, 80, 0.2);
+}
+
+/* 注册导航样式 */
+.register-navigation {
+  text-align: center;
+  margin: 20rpx 0;
+}
+
+.register-text {
+  color: #666;
+  font-size: 28rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-link {
+  color: #4CAF50;
+  font-weight: bold;
+  margin-left: 10rpx;
+  position: relative;
+}
+
+.register-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4rpx;
+  left: 0;
+  width: 100%;
+  height: 2rpx;
+  background-color: #4CAF50;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.register-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* 切换登录方式按钮 */
 .switch-login-btn {
-  height: 60rpx !important;
-  line-height: 60rpx !important;
-  min-width: 240rpx !important;
-  background-color: #fff !important;
-  border: none !important;
-  color: #666 !important;
-  font-size: 26rpx !important;
+  height: 60rpx;
+  line-height: 60rpx;
+  background-color: transparent;
+  color: #4CAF50;
+  font-size: 28rpx;
   display: block;
-  margin: 20rpx auto 0;
-  padding: 0 30rpx;
-  border-radius: 0;
+  text-align: center;
+  padding: 0;
+  border: none;
   box-shadow: none;
+  width: 100%;
+  margin-top: 20rpx;
+}
+
+/* 页脚样式 */
+.footer {
+  padding: 30rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  background-color: #fff;
 }
 </style>

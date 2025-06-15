@@ -28,10 +28,11 @@ print("start")
 w3 = web3.Web3(web3.HTTPProvider('https://holesky.drpc.org'))
 
 if not w3.is_connected():
-    raise Exception("无法连接到以太坊节点，请检查 RPC 端点")
+    raise Exception("can't eth")
+
 
 # 加载合约ABI
-with open("abi3.json", "r") as file:
+with open("D:\\pythonProject2\\abi3.json", "r") as file:
     abi = json.load(file)
 
 # 合约地址
@@ -44,7 +45,7 @@ contract = w3.eth.contract(address=contract_address, abi=abi)
 account_address = '0x3cc62ea2922ca9bf988FD91Bf38Dff7e3610072F'
 
 # 构建mintNFT交易
-metafile = "https://ipfs.io/ipfs/bafkreifhwm5azzumymctqhlwsvhhgof3rcc5qphkb4ryszrto3nb6ouaua"
+metafile = "https://ipfs.io/ipfs/bafkreibz6sbb3jjvbsohgh6pgiowmtdkcn2emsqdd2rq5fs5oyzvzjq4xi"
 
 # 获取当前nonce
 nonce = w3.eth.get_transaction_count(account_address)
@@ -61,8 +62,8 @@ transaction = contract.functions.mintNFT(metafile).build_transaction({
 private_key = '98bbc6dbd4dbf4e51ff4d0baaff1393aa27f3530e91fa1426cf9bdd3eb8a2df6'
 signed_txn = w3.eth.account.sign_transaction(transaction, private_key)
 tx_hash = w3.eth.send_raw_transaction(signed_txn.raw_transaction)
-print(f"交易已发送，交易哈希: {tx_hash.hex()}")
+print(f"Transaction sent, hash: {tx_hash.hex()}")
 
 # 等待交易确认
 receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
-print(f"交易已确认，区块号: {receipt.blockNumber}")
+print(f"Transaction confirmed, block number: {receipt.blockNumber}")

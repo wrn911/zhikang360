@@ -78,6 +78,71 @@
         ORDER BY create_time DESC
     </select>
 
+    <!-- 按日期筛选查询 -->
+    <select id="selectByAimAndGroceryAndTime" resultType="com.example.entity.UserFoodRecommendList">
+        SELECT *
+        FROM user_food_recommend_list
+        WHERE user_id = #{userId}
+        AND aim = #{aim}
+        AND grocery = #{grocery}
+        AND time = #{time}
+        ORDER BY id DESC
+    </select>
+
+
+
+    <select id="selectUserFoodRecommendListById" resultType="com.example.entity.UserFoodRecommendList">
+        SELECT *
+        FROM user_food_recommend_list
+        WHERE id = #{id}
+    </select>
+
+
+    <update id="updateWeight">
+        UPDATE user_food_recommend_list
+        <set>
+            <if test="weight != null">weight = #{weight},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insertUserFoodRecommendFromTemplate">
+        INSERT INTO user_food_recommend_list (
+        user_id,
+        food_recommend_list_id,
+        aim,
+        grocery,
+        time,
+        food_id,
+        food_name,
+        weight
+        )
+        SELECT
+        #{userId},
+        frl.id,
+        frl.aim,
+        frl.grocery,
+        frl.time,
+        frl.food_id,
+        frl.food_name,
+        frl.weight
+        FROM food_recommend_list frl
+    </insert>
+
+    <select id="selectTodayRecommendedFoods" resultType="com.example.entity.UserFoodRecommendList">
+        SELECT ufrl.*
+        FROM user_food_recommend_list ufrl
+        WHERE ufrl.user_id = #{userId}
+        AND ufrl.food_id IN (
+        SELECT fr.food_id
+        FROM food_recommend fr
+        WHERE fr.user_id = #{userId}
+        AND DATE(fr.create_time) = #{targetDate}
+        )
+    </select>
+
+
+
     <!-- 动态更新分量 -->
     <update id="updatePortion">
         UPDATE food_recommend

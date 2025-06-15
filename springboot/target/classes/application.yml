@@ -7,7 +7,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root   #你本地的数据库用户名
-    password: d731028031 #你本地的数据库密码
+    password: wangruining2004 #你本地的数据库密码
     url: jdbc:mysql://localhost:3306/zhikang360?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
   servlet:
     multipart:
@@ -28,5 +28,10 @@ pagehelper:
   reasonable: false
   support-methods-arguments: true
   params: count=countSql
+
+# Python后端配置
+python:
+  backend:
+    url: http://localhost:8000  # 根据你的Python后端实际地址修改
 
 ip: localhost

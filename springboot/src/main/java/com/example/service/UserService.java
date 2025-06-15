@@ -20,6 +20,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -46,33 +47,37 @@ public class UserService {
     /**
      * 新增
      */
+    @Transactional
     public void add(User user) {
-        User dbUser = userMapper.selectByUsername(user.getUsername());
-        if (ObjectUtil.isNotNull(dbUser)) {
+        // 1. 检查用户名和手机号唯一性
+        if (ObjectUtil.isNotNull(userMapper.selectByUsername(user.getUsername()))) {
             throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
         }
-        User dbUser1 = userMapper.selectByPhone(user.getPhone());
-        if (ObjectUtil.isNotNull(dbUser1)) {
+        if (ObjectUtil.isNotNull(userMapper.selectByPhone(user.getPhone()))) {
             throw new CustomException(ResultCodeEnum.PHONE_EXIST_ERROR);
         }
-        String http = "http://" + ip + ":" + port + "/files/";
-        user.setAvatar(http + "1697438073596-avatar.png");
 
-        LocalDateTime currentTime = LocalDateTime.now(); // 默认系统时区
-        user.setRegister_time(currentTime);
+        // 2. 设置默认值
+        String avatarUrl = "http://" + ip + ":" + port + "/files/default-avatar.png"; // 建议抽为常量
+        user.setAvatar(avatarUrl);
+        user.setRegister_time(LocalDateTime.now());
         user.setRole(RoleEnum.USER.name());
-        user.setId(userMapper.selectMaxId()+1);
-        //添加user_basic_info
+
+        // 3. 插入用户表（自动生成主键）
+        userMapper.insert(user);
+        Long userId = Long.valueOf(user.getId()); // 自动回填的ID
+
+        // 4. 插入 user_basic_info
         UserBasicInfo ubi = new UserBasicInfo();
-        int userId = user.getId();
-        long userId1 = userId;
-        ubi.setUserId(userId1);
+        ubi.setUserId(userId);
         ubi.setGender(SexEnum.保密.name());
         userBasicInfoMapper.insert(ubi);
-        UserCheckInfo userCheckInfo = new UserCheckInfo(BaseContext.getCurrentId(),0,0,0,0,0.0,0.0);
-        userBasicInfoMapper.insertCheckInfo(userCheckInfo);
-        userMapper.insert(user);
+
+        // 5. 插入 user_check_info
+        UserCheckInfo uci = new UserCheckInfo(userId, 0, 0, 0, 0, 0.0, 0.0);
+        userBasicInfoMapper.insertCheckInfo(uci);
     }
+
 
     /**
      * 删除

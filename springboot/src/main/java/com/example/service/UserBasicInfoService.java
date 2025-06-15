@@ -10,9 +10,12 @@ import com.example.mapper.*;
 import com.example.utils.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
+import java.time.*;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,10 +31,21 @@ public class UserBasicInfoService {
     private SleepInfoMapper sleepInfoMapper;
     @Resource
     private IllnessInfoMapper illnessInfoMapper;
+    @Resource
+    private ExerciseCheckinMapper exerciseCheckinMapper;
+
+    @Resource
+    private UserRecommendInfoMapper userRecommendInfoMapper;
+    @Autowired
+    private FoodRecommendMapper foodRecommendMapper;
 
     public void add(UserBasicInfo userBasicInfo) {
-
         userBasicInfoMapper.insert(userBasicInfo);
+    }
+
+    public UserRecommendInfo selectRecommend(){
+        Long userId = BaseContext.getCurrentId();
+        return userRecommendInfoMapper.selectByUserId(userId);
     }
 
     public void deleteById(Integer userId) {
@@ -39,9 +53,55 @@ public class UserBasicInfoService {
         userBasicInfoMapper.deleteById(userId);
     }
 
-    public void updateById(UserBasicInfo userBasicInfo) {
+    private int calculateAge(Date birthDate) {
+        if (birthDate == null) return 30; // 默认值（可以根据需要调整）
+        LocalDate birth = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return Period.between(birth, LocalDate.now()).getYears();
+    }
+
+
+    public void updateById(UserBasicInfo userBasicInfo1) {
         Long userId = BaseContext.getCurrentId();
+        UserBasicInfo userBasicInfo = userBasicInfoMapper.selectById((int)(long)userId);
+        if ("男".equals(userBasicInfo1.getGender()) || "女".equals(userBasicInfo1.getGender()) || "保密".equals(userBasicInfo1.getGender())) {
+            userBasicInfo.setGender(userBasicInfo1.getGender());
+        }
+        BeanUtils.copyProperties(userBasicInfo1, userBasicInfo);
         userBasicInfo.setUserId(userId);
+        UserRecommendInfo userRecommendInfo = userRecommendInfoMapper.selectByUserId(userId);
+        // 获取基础数据
+        int height = (int) userBasicInfo.getHeight(); // cm
+        int weight = (int)userBasicInfo.getWeight(); // kg
+        int age = calculateAge(userBasicInfo.getBirthDate());
+        String gender = userBasicInfo.getGender(); // "男" 或 "女"
+        // 计算 BMR（基础代谢率）
+        double bmr;
+        if ("女".equals(gender)) {
+            bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+        } else {
+            bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+        }
+        // 估算活动系数（默认中等活动）
+        int tdee = (int)(bmr * 1.35);
+        tdee = tdee / 100 * 100;
+        // 推荐运动消耗 = 体重 × 系数（比如 6）
+        int exerciseCalories = weight * 6;
+        if(userRecommendInfo == null){
+            userRecommendInfo = new UserRecommendInfo();
+            userRecommendInfo.setUserId(userId);
+            userRecommendInfo.setSleepTimeStart(LocalTime.of(22, 0));
+            userRecommendInfo.setSleepTimeEnd(LocalTime.of(6, 0));
+            userRecommendInfo.setSleepTimeInmid(LocalTime.of(13, 0));
+            // 写入推荐信息
+            userRecommendInfo.setFoodCalories(tdee);
+            userRecommendInfo.setExerciseCalories(exerciseCalories);
+            userRecommendInfoMapper.insert(userRecommendInfo);
+        }else{
+            // 写入推荐信息
+            userRecommendInfo.setFoodCalories((int) Math.round(tdee));
+            userRecommendInfo.setExerciseCalories((int) Math.round(exerciseCalories));
+            userRecommendInfoMapper.update(userRecommendInfo);
+        }
         userBasicInfoMapper.updateById(userBasicInfo);
     }
 
@@ -66,6 +126,7 @@ public class UserBasicInfoService {
         FoodInfo foodInfo = new FoodInfo();
         Long userId = BaseContext.getCurrentId();
         foodInfo.setUserId(userId);
+        foodInfo.setAim(foodInfoDAO.getAim());
         foodInfo.setWillingness(foodInfoDAO.getWillingness());
         ListUtils listUtils = new ListUtils();
         foodInfo.setPreferences(listUtils.joinWithDun(foodInfoDAO.getPreferences(),true,"暂无请忽略"));
@@ -74,6 +135,7 @@ public class UserBasicInfoService {
         foodInfo.setCreateTime(time);
         foodInfo.setUpdateTime(time);
         foodInfoMapper.insert(foodInfo);
+        foodRecommendMapper.insertUserFoodRecommendFromTemplate(userId);
     }
 
     public void updateFoodInfoById(FoodInfo foodInfo) {
@@ -102,6 +164,7 @@ public class UserBasicInfoService {
         sportInfo.setCreateTime(time);
         sportInfo.setUpdateTime(time);
         sportInfoMapper.insert(sportInfo);
+        exerciseCheckinMapper.insertUserExerciseRecommendFromTemplate(userId);
     }
 
     public void updateSportInfoById(SportInfo sportInfo) {

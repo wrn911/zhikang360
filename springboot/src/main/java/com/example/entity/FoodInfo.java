@@ -11,4 +11,5 @@ public class FoodInfo {
     private String willingness;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private String aim;
 }

@@ -1,9 +1,11 @@
 package com.example.mapper;
 
 import com.example.DAO.CheckinCountDTO;
-import com.example.entity.ExerciseCheckin;
+import com.example.entity.*;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,5 +52,24 @@ public interface ExerciseCheckinMapper {
     int updateById(ExerciseCheckin exerciseCheckin);
 
     CheckinCountDTO selectCheckinCounts(Long userId);
+
+    List<UserExerciseRecommendList> selectByCategory(@Param("userId") Long userId, @Param("exercise_category") String type);
+
+    List<UserExerciseRecommendList> selectTodayRecommendedExercises(@Param("userId") Long userId, @Param("today") LocalDate today);
+
+    List<ExerciseCheckin> selectByUserIdAndDate(@Param("userId") Long userId,
+                                              @Param("date") String date);
+    List<ExerciseCheckin> selectTodayUncheckinByUser(@Param("userId") Long userId, @Param("today") LocalDate today);
+
+    void insert(ExerciseCheckin record);
+
+    void insertUserExerciseRecommendFromTemplate(@Param("userId") Long userId);
+
+    UserExerciseRecommendList selectUserExerciseRecommendListById(@Param("id") Integer id);
+
+    void updateWeight(@Param("id") Integer id,
+                      @Param("weight") Double weight);
+
+
 }
 

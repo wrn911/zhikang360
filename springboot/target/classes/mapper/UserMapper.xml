@@ -57,7 +57,7 @@
         where id = #{id}
     </delete>
 
-    <insert id="insert" parameterType="com.example.entity.User" useGeneratedKeys="true">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.example.entity.User">
         insert into user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>

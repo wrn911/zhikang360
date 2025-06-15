@@ -14,7 +14,7 @@ public interface ExerciseMapper {
     /**
      * 根据用户Id查询历史运动
      */
-    @Select("select * from exercise_checkin where user_id = #{userId}")
+    @Select("select * from exercise_checkin where user_id = #{userId} order by create_time desc")
     List<ExerciseCheckin> selectHistory(Long userId);
 
 

@@ -1,6 +1,7 @@
 package com.example.controller;
 
 
+import com.example.DAO.MusicDTO;
 import com.example.common.Result;
 import com.example.entity.Music;
 import com.example.entity.PlayList;
@@ -38,8 +39,9 @@ public class MusicController { // written by djy 2025-4-14 22:00
 
     // 新加音乐至播放列表
     @PostMapping("/playlist/add")
-    public Result addToPlaylist(@RequestBody Music music) {
-        return Result.success(musicService.addToPlaylist(music));
+    public Result addToPlaylist(@RequestBody MusicDTO musicDTO) {
+        musicService.changeIfNow(musicDTO);
+        return Result.success(musicService.addToPlaylist(musicDTO));
     }
 
     // 个人从本地导入音乐

@@ -5,7 +5,7 @@
 <!-- FoodInfoMapper.xml -->
 <mapper namespace="com.example.mapper.FoodInfoMapper">
     <sql id="Base_Column_List">
-        id, user_id, preferences, avoids, willingness, create_time, update_time
+        id, user_id, aim, preferences, avoids, willingness, create_time, update_time
     </sql>
 
     <select id="selectByUserId" resultType="FoodInfo">
@@ -14,13 +14,14 @@
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO food_info (user_id, preferences, avoids, willingness, create_time, update_time)
-        VALUES (#{userId}, #{preferences}, #{avoids}, #{willingness}, #{createTime}, #{updateTime})
+        INSERT INTO food_info (user_id, aim, preferences, avoids, willingness, create_time, update_time)
+        VALUES (#{userId}, #{aim}, #{preferences}, #{avoids}, #{willingness}, #{createTime}, #{updateTime})
     </insert>
 
     <update id="updateById">
         UPDATE food_info
         <set>
+            <if test="aim != null">aim=#{aim},</if>
             <if test="preferences != null">preferences=#{preferences},</if>
             <if test="avoids != null">avoids=#{avoids},</if>
             <if test="willingness != null">willingness=#{willingness},</if>

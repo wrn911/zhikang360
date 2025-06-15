@@ -1,11 +1,17 @@
 <template>
-	<view style="padding: 20rpx;">
-		<view class="box">
+	<view class="container">
+		<view class="page-header">
+			<text class="page-title">个人信息</text>
+			<text class="page-subtitle">完善您的个人资料</text>
+		</view>
+		
+		<view class="form-card">
 			<uni-forms :modelValue="form" :rules="rules" ref="formRef" label-width="140rpx" label-align="right">
 				<uni-forms-item label="头像" name="avatar">
-					<uni-file-picker limit="1" :image-styles="imageStyles" :del-icon="false" :disable-preview="true"
-						fileMediatype="image" v-model="avatar" @select="handleAvatarUploadSuccess"></uni-file-picker>
-
+					<view class="avatar-wrapper">
+						<uni-file-picker limit="1" :image-styles="imageStyles" :del-icon="false" :disable-preview="true"
+							fileMediatype="image" v-model="avatar" @select="handleAvatarUploadSuccess"></uni-file-picker>
+					</view>
 				</uni-forms-item>
 				<uni-forms-item label="账号" name="username">
 					<uni-easyinput type="text" v-model="form.username" placeholder="" disabled />
@@ -18,7 +24,7 @@
 				</uni-forms-item>
 
 				<uni-forms-item>
-					<button type="primary" size="mini" @click="save">保 存</button>
+					<button class="save-button" @click="save">保 存</button>
 				</uni-forms-item>
 			</uni-forms>
 		</view>
@@ -36,7 +42,7 @@
 					"height": 80, // 边框高度
 					"width": 80, // 边框宽度
 					"border": { // 如果为 Boolean 值，可以控制边框显示与否
-						"color": "#eee", // 边框颜色
+						"color": "#e0e0e0", // 边框颜色
 						"width": "1px", // 边框宽度
 						"style": "solid", // 边框样式
 						"radius": "50%" // 边框圆角，支持百分比
@@ -123,5 +129,128 @@
 </script>
 
 <style>
+.container {
+  padding: 30rpx;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f8f9fa, #e9f2ef);
+}
 
+/* 页面标题 */
+.page-header {
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #4CAF50;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.page-subtitle {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+}
+
+/* 表单卡片 */
+.form-card {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 头像上传区域 */
+.avatar-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* 保存按钮 */
+.save-button {
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  color: white;
+  border: none;
+  border-radius: 50rpx;
+  padding: 20rpx 0;
+  font-size: 32rpx;
+  width: 100%;
+  margin-top: 30rpx;
+  box-shadow: 0 5rpx 15rpx rgba(76, 175, 80, 0.3);
+  transition: all 0.3s ease;
+}
+
+.save-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(76, 175, 80, 0.3);
+}
+
+/* 表单项样式优化 */
+:deep(.uni-forms-item) {
+  margin-bottom: 25rpx;
+}
+
+:deep(.uni-easyinput__content) {
+  background-color: #f9f9f9;
+  border-radius: 8rpx;
+  height: 80rpx;
+  border: 1px solid #e0e0e0;
+}
+
+:deep(.uni-easyinput__content-input) {
+  height: 80rpx;
+  padding: 0 15rpx;
+}
+
+:deep(.uni-forms-item__label) {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+:deep(.uni-data-checklist) {
+  display: flex;
+  flex-direction: row;
+}
+
+:deep(.uni-data-checklist .checklist-box) {
+  margin-right: 20rpx;
+  padding: 10rpx 15rpx;
+  border-radius: 8rpx;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+:deep(.uni-data-checklist .checklist-box.is-checked) {
+  background-color: #e8f5e9;
+  border-color: #4CAF50;
+}
+
+:deep(.uni-data-checklist .checklist-text) {
+  font-size: 26rpx;
+  color: #333;
+}
+
+:deep(.uni-data-checklist .checklist-box.is-checked .checklist-text) {
+  color: #4CAF50;
+}
+
+/* 文件上传组件样式 */
+:deep(.uni-file-picker__container) {
+  display: flex;
+  justify-content: flex-start;
+}
+
+:deep(.uni-file-picker__upload) {
+  border-color: #4CAF50;
+  background-color: #e8f5e9;
+}
+
+:deep(.uni-file-picker__upload-text) {
+  color: #4CAF50;
+}
 </style>

@@ -2,12 +2,12 @@ package com.example.service.impl;
 
 import com.example.DAO.CheckinCountDTO;
 import com.example.common.enums.BadgeStandardTypeEnum;
+import com.example.common.enums.ExerciseCategoryEnum;
+import com.example.common.enums.FoodGroceryEnum;
+import com.example.common.enums.FoodTimeEnum;
 import com.example.context.BaseContext;
 import com.example.entity.*;
-import com.example.mapper.BadgeStandardMapper;
-import com.example.mapper.ExerciseCheckinMapper;
-import com.example.mapper.ExerciseMapper;
-import com.example.mapper.UserBasicInfoMapper;
+import com.example.mapper.*;
 import com.example.service.ExerciseService;
 import com.example.utils.ExerciseRecommendation;
 import com.example.utils.MedalConstants;
@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -37,7 +40,44 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Autowired
     private BadgeStandardMapper badgeStandardMapper;
 
+    @Autowired
+    private UserRecommendInfoMapper userRecommendInfoMapper;
 
+    public void blockChainLink(int x){
+        Process proc;
+        x=x-2;
+        try {
+            // 指定虚拟环境中的 Python 解释器路径
+            // 指定虚拟环境中的 Python 解释器路径
+            String pythonExecutable = "E:\\ruanjian2\\anaconda\\envs\\NanoGPT\\python.exe";  // 7层上级目录
+            String scriptPath = "D:\\Java\\IdeaProjects\\zhikang360\\pythonProject2\\main"+x+".py";  // 7层上级目录
+
+            // 运行 Python 脚本
+            proc = Runtime.getRuntime().exec(pythonExecutable + " " + scriptPath);
+
+            // 读取标准输出流
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                System.out.println("Output: " + line);
+            }
+            in.close();
+
+            // 读取标准错误流
+            BufferedReader errorIn = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+            while ((line = errorIn.readLine()) != null) {
+                System.err.println("Error: " + line);
+            }
+            errorIn.close();
+
+            // 等待 Python 进程执行完毕
+            proc.waitFor();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     // 勋章检测
     public void checkMedal(Double addCal) {
@@ -67,6 +107,7 @@ public class ExerciseServiceImpl implements ExerciseService {
                 Integer badgeId = badgeStandardMapper.selectIdByTypeAndDays(BadgeStandardTypeEnum.运动打卡天数.name(), medalDay);
                 MyBadge myBadge = new MyBadge(userId, badgeId, true);
                 badgeStandardMapper.insertPersonBadge(myBadge);
+                blockChainLink(badgeId);
             }
         }
 
@@ -88,6 +129,7 @@ public class ExerciseServiceImpl implements ExerciseService {
                 Integer badgeId = badgeStandardMapper.selectIdByTypeAndDays(BadgeStandardTypeEnum.运动连续打卡天数.name(), medalDay);
                 MyBadge myBadge = new MyBadge(userId, badgeId, true);
                 badgeStandardMapper.insertPersonBadge(myBadge);
+                blockChainLink(badgeId);
             }
         }
 
@@ -109,6 +151,7 @@ public class ExerciseServiceImpl implements ExerciseService {
             Integer badgeId = badgeStandardMapper.selectIdByTypeAndDays(BadgeStandardTypeEnum.运动记录消耗.name(), medalDay);
             MyBadge myBadge = new MyBadge(userId, badgeId, true);
             badgeStandardMapper.insertPersonBadge(myBadge);
+            blockChainLink(badgeId);
         }
 
         userBasicInfoMapper.updateCheckInfo(userCheckInfo);
@@ -158,8 +201,8 @@ public class ExerciseServiceImpl implements ExerciseService {
         map.put("userId", userId);
         map.put("createDate", LocalDate.now());
         List<ExerciseCheckin> exerciseCheckins = exerciseCheckinMapper.selectAll(map);
-
-        if (exerciseCheckins.isEmpty()) {
+        /*
+        * if (exerciseCheckins.isEmpty()) {
             //推荐运动
             List<Exercise> exercises = exerciseMapper.selectAll(new Exercise());
             ExerciseRecommendation recommendation = new ExerciseRecommendation(exercises);
@@ -182,22 +225,163 @@ public class ExerciseServiceImpl implements ExerciseService {
             //重新查询
             exerciseCheckins = exerciseCheckinMapper.selectAll(map);
         }
+        *
+        *
+        * */
+
         return exerciseCheckins;
     }
 
     @Override
-    public void addNewToday(ExerciseRecommend exercise) {
+    public void generateRecommend() {
+        Long userId = BaseContext.getCurrentId();
+        UserRecommendInfo userRecommendInfo = userRecommendInfoMapper.selectByUserId(userId);
+        int recommendCalories = userRecommendInfo.getExerciseCalories();
+        List<ExerciseRecommend> recommendExercises = new ArrayList<>();
+        recommendExercises.add(this.recommendExercises(ExerciseCategoryEnum.有氧运动.name(), (int)(recommendCalories * 0.5), userId));
+        recommendExercises.add(this.recommendExercises(ExerciseCategoryEnum.力量训练.name(), (int)(recommendCalories * 0.2), userId));
+        recommendExercises.add(this.recommendExercises(ExerciseCategoryEnum.getRandomCategory().name(), (int)(recommendCalories * 0.3), userId));
+        //记录这些今日推荐运动
         List<Map> list = new ArrayList<>();
-        Map temp = new HashMap<>();
-        temp.put("userId", BaseContext.getCurrentId());
-        temp.put("now", LocalDateTime.now());
-        temp.put("exerciseId", exercise.getExerciseId());
-        temp.put("exerciseName", exercise.getExerciseName());
-        temp.put("duration", exercise.getDuration());
-        temp.put("caloriesBurned", exercise.getDuration() * exercise.getCaloriesBurnRate() / 10);//每10分钟
-        list.add(temp);
+        for (ExerciseRecommend exercise : recommendExercises) {
+            Map temp = new HashMap<>();
+            temp.put("userId", userId);
+            temp.put("now", LocalDateTime.now());
+            temp.put("exerciseId", exercise.getExerciseId());
+            temp.put("exerciseName", exercise.getExerciseName());
+            temp.put("duration", exercise.getDuration());
+            temp.put("caloriesBurned", exercise.getDuration() * exercise.getCaloriesBurnRate() / 10);//每10分钟
+            list.add(temp);
+        }
         exerciseCheckinMapper.insertBatch(list);
     }
+
+    public ExerciseRecommend recommendExercises(String type, int targetCalories, Long userId) {
+        // 获取某类运动的候选推荐列表
+        List<UserExerciseRecommendList> exerciseRecommendLists = exerciseCheckinMapper.selectByCategory(userId, type);
+
+        // 利用轮盘赌抽选推荐
+        ExerciseRecommend recommend = buildRecommend(exerciseRecommendLists, targetCalories);
+
+        return recommend;
+    }
+
+    private ExerciseRecommend buildRecommend(List<UserExerciseRecommendList> candidates, int targetCalories) {
+        if (candidates == null || candidates.isEmpty()) {
+            throw new IllegalArgumentException("该类型下无可用运动项目");
+        }
+
+        // 构建轮盘赌的权重数组（仅用 weight 字段）
+        List<Double> weights = new ArrayList<>();
+        double totalWeight = 0.0;
+
+        for (UserExerciseRecommendList e : candidates) {
+            double w = e.getWeight(); // 注意：weight 为 double 类型，越大越容易被选中
+            weights.add(w);
+            totalWeight += w;
+        }
+
+        // 抽取一个随机数
+        double rand = Math.random() * totalWeight;
+
+        // 执行轮盘赌选择
+        int selectedIndex = 0;
+        double sum = 0;
+        for (int i = 0; i < weights.size(); i++) {
+            sum += weights.get(i);
+            if (rand <= sum) {
+                selectedIndex = i;
+                break;
+            }
+        }
+
+        // 获取被选中的运动项目
+        UserExerciseRecommendList selected = candidates.get(selectedIndex);
+
+        // 使用 calories_burn_rate（每10分钟消耗）计算所需时长（分钟）
+        int burnPer10Min = Integer.parseInt(selected.getCaloriesBurnRate());
+        int duration = (int) Math.round(targetCalories * 10.0 / burnPer10Min);
+
+        // 将时长四舍五入为最接近的5的倍数
+        int roundedDuration = ((int) Math.round(duration / 5.0) + 1) * 5;
+
+        // 构造推荐结果
+        ExerciseRecommend result = new ExerciseRecommend();
+        result.setExerciseId(selected.getExerciseId());
+        result.setExerciseName(selected.getExerciseName());
+        result.setExerciseCategory(selected.getExerciseCategory());
+        result.setCaloriesBurnRate(burnPer10Min);
+        result.setCalories(targetCalories);
+        result.setDuration(roundedDuration);
+
+        return result;
+    }
+    @Override
+    public List<UserExerciseRecommendList> GetUserExerciseRecommendList(){
+        Long userId = BaseContext.getCurrentId();
+        LocalDate date = LocalDate.now();
+        return exerciseCheckinMapper.selectTodayRecommendedExercises(userId, date);
+    }
+
+    /**
+     *     @Override
+     *     public void addNewToday(ExerciseRecommend exercise) {
+     *         List<Map> list = new ArrayList<>();
+     *         Map temp = new HashMap<>();
+     *         temp.put("userId", BaseContext.getCurrentId());
+     *         temp.put("now", LocalDateTime.now());
+     *         temp.put("exerciseId", exercise.getExerciseId());
+     *         temp.put("exerciseName", exercise.getExerciseName());
+     *         temp.put("duration", exercise.getDuration());
+     *         temp.put("caloriesBurned", exercise.getDuration() * exercise.getCaloriesBurnRate() / 10);//每10分钟
+     *         list.add(temp);
+     *         exerciseCheckinMapper.insertBatch(list);
+     *     }
+     * @param exercise
+     */
+
+
+    @Override
+    public void addNewToday(ExerciseRecommend exercise) {
+        Long userId = BaseContext.getCurrentId();
+        LocalDate today = LocalDate.now();
+
+        // 查询当天未checkin的同类运动
+        List<ExerciseCheckin> todayUncheckins = exerciseCheckinMapper.selectTodayUncheckinByUser(userId, today);
+
+        // 查找是否有重复的 exerciseId
+        ExerciseCheckin matched = null;
+        for (ExerciseCheckin record : todayUncheckins) {
+            if (record.getExerciseId().equals(exercise.getExerciseId())) {
+                matched = record;
+                break;
+            }
+        }
+
+        if (matched != null) {
+            // 如果有重复记录，合并时长和卡路里，更新
+            int newDuration = matched.getDuration() + exercise.getDuration();
+            int newCalories = matched.getCaloriesBurned() + exercise.getDuration() * exercise.getCaloriesBurnRate() / 10;
+
+            matched.setDuration(newDuration);
+            matched.setCaloriesBurned(newCalories);
+            matched.setCreateTime(LocalDateTime.now());
+
+            exerciseCheckinMapper.updateById(matched);
+        } else {
+            // 否则插入新记录
+            ExerciseCheckin newRecord = new ExerciseCheckin();
+            newRecord.setUserId(userId.intValue());
+            newRecord.setExerciseId(exercise.getExerciseId());
+            newRecord.setExerciseName(exercise.getExerciseName());
+            newRecord.setDuration(exercise.getDuration());
+            newRecord.setCaloriesBurned(exercise.getDuration() * exercise.getCaloriesBurnRate() / 10);
+            newRecord.setCreateTime(LocalDateTime.now());
+
+            exerciseCheckinMapper.insert(newRecord);
+        }
+    }
+
 
     @Override
     @Transactional

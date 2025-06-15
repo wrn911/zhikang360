@@ -36,10 +36,10 @@
         class="card"
         @click="handleFeatureClick(item)"
       >
+	    <text class="card-title">{{ item.title }}</text>
         <view class="icon-box" :style="`background-color: ${item.color};`">
           <text class="iconfont" :class="item.icon"></text>
         </view>
-        <text class="card-title">{{ item.title }}</text>
         <text class="card-desc">{{ item.desc }}</text>
       </view>
     </view>
@@ -82,7 +82,7 @@
 		   @touchstart="handleTouchStart"   <!-- 新增触摸事件处理 -->
 	    
 	      <view 
-	        v-for="(song, index) in personPlaylist" 
+	        v-for="(song, index) in filterPlaylist" 
 	        :key="index" 
 	        class="popup-item"
 	      >
@@ -103,6 +103,161 @@
 	    </scroll-view>
 	
 	    <button class="popup-close" @click="closePopup">关闭</button>
+	  </view>
+	</uni-popup>
+	
+	<!-- 修改后的弹窗组件 -->
+	<uni-popup ref="playlistPopup1" type="center">
+	  <view class="popup-content">
+		<!-- 🎵 自动生成音乐按钮 -->
+		<view class="import-wrapper" @click.stop="openMusicModal('午休助眠')">
+		  <uni-icons type="plus-filled" size="24" color="#4a90e2" />
+		  <text class="import-text">自动生成音乐</text>
+		</view>
+	    <text class="popup-title">播放列表</text>
+		
+	    <!-- 固定表头 -->
+	    <view class="popup-header">
+	      <text class="header-name">歌名</text>
+	      <text class="header-duration">时长</text>
+	      <text class="header-genre">类型</text>
+	      <text class="header-action">操作</text>
+	    </view>
+	
+	    <!-- 可滚动区域 -->
+	    <scroll-view 
+	      class="scroll-list"
+	      scroll-y 
+	      :show-scrollbar="true"
+	      :enable-flex="true"
+		   @touchstart="handleTouchStart"   <!-- 新增触摸事件处理 -->
+	    
+	      <view 
+	        v-for="(song, index) in filterPlaylist1" 
+	        :key="index" 
+	        class="popup-item"
+	      >
+	        <text class="item-name">{{ song.name }}</text>
+	        <text class="item-duration">{{ song.duration }}</text>
+	        <text class="item-genre">{{ song.genre }}</text>
+	        <!--view class="item-action" @click.stop="handleAddClick(song)">
+	          <uni-icons type="plus" size="20" color="#4a90e2"></uni-icons>
+	        </view>-->
+			<view class="item-action" @click.stop="handleAddClick(song)">
+			  <uni-icons 
+			    type="plus" 
+			    size="20" 
+			    class="action-icon"
+			  ></uni-icons>
+			</view>
+	      </view>
+	    </scroll-view>
+	
+	    <button class="popup-close" @click="closePopup1">关闭</button>
+	  </view>
+	</uni-popup>
+	
+	<!-- 修改后的弹窗组件 -->
+	<uni-popup ref="playlistPopup2" type="center">
+	  <view class="popup-content">
+		<!-- 🎵 自动生成音乐按钮 -->
+		<view class="import-wrapper" @click.stop="openMusicModal('晚睡助眠')">
+		  <uni-icons type="plus-filled" size="24" color="#4a90e2" />
+		  <text class="import-text">自动生成音乐</text>
+		</view>
+	    <text class="popup-title">播放列表</text>
+		
+	    <!-- 固定表头 -->
+	    <view class="popup-header">
+	      <text class="header-name">歌名</text>
+	      <text class="header-duration">时长</text>
+	      <text class="header-genre">类型</text>
+	      <text class="header-action">操作</text>
+	    </view>
+	
+	    <!-- 可滚动区域 -->
+	    <scroll-view 
+	      class="scroll-list"
+	      scroll-y 
+	      :show-scrollbar="true"
+	      :enable-flex="true"
+		   @touchstart="handleTouchStart"   <!-- 新增触摸事件处理 -->
+	    
+	      <view 
+	        v-for="(song, index) in filterPlaylist2" 
+	        :key="index" 
+	        class="popup-item"
+	      >
+	        <text class="item-name">{{ song.name }}</text>
+	        <text class="item-duration">{{ song.duration }}</text>
+	        <text class="item-genre">{{ song.genre }}</text>
+	        <!--view class="item-action" @click.stop="handleAddClick(song)">
+	          <uni-icons type="plus" size="20" color="#4a90e2"></uni-icons>
+	        </view>-->
+			<view class="item-action" @click.stop="handleAddClick(song)">
+			  <uni-icons 
+			    type="plus" 
+			    size="20" 
+			    class="action-icon"
+			  ></uni-icons>
+			</view>
+	      </view>
+	    </scroll-view>
+	
+	    <button class="popup-close" @click="closePopup2">关闭</button>
+	  </view>
+	</uni-popup>
+	
+	<!-- 修改后的弹窗组件 -->
+	<uni-popup ref="playlistPopup3" type="center">
+	  <view class="popup-content">
+		<!-- 🎵 自动生成音乐按钮 -->
+		<view class="import-wrapper" @click.stop="openMusicModal('解压')">
+		  <uni-icons type="plus-filled" size="24" color="#4a90e2" />
+		  <text class="import-text">自动生成音乐</text>
+		</view>
+		
+		
+	    <text class="popup-title">播放列表</text>
+		
+	    <!-- 固定表头 -->
+	    <view class="popup-header">
+	      <text class="header-name">歌名</text>
+	      <text class="header-duration">时长</text>
+	      <text class="header-genre">类型</text>
+	      <text class="header-action">操作</text>
+	    </view>
+	
+	    <!-- 可滚动区域 -->
+	    <scroll-view 
+	      class="scroll-list"
+	      scroll-y 
+	      :show-scrollbar="true"
+	      :enable-flex="true"
+		   @touchstart="handleTouchStart"   <!-- 新增触摸事件处理 -->
+	    
+	      <view 
+	        v-for="(song, index) in filterPlaylist3" 
+	        :key="index" 
+	        class="popup-item"
+	      >
+	        <text class="item-name">{{ song.name }}</text>
+	        <text class="item-duration">{{ song.duration }}</text>
+	        <text class="item-genre">{{ song.genre }}</text>
+	        <!--view class="item-action" @click.stop="handleAddClick(song)">
+	          <uni-icons type="plus" size="20" color="#4a90e2"></uni-icons>
+	        </view>-->
+			<view class="item-action" @click.stop="handleAddClick(song)">
+			  <uni-icons 
+			    type="plus" 
+			    size="20" 
+			    class="action-icon"
+			  ></uni-icons>
+			</view>
+	      </view>
+	    </scroll-view>
+	
+	    <button class="popup-close" @click="closePopup3">关闭</button>
 	  </view>
 	</uni-popup>
 
@@ -238,11 +393,41 @@
 	        </view>
 	      </transition>
     </view>
+	<!-- 🎼 弹窗表单 -->
+	<!-- ✅ 独立的 musicPopup（放在 template 最外层） -->
+	<uni-popup ref="musicPopup" type="center">
+	  <view class="popup-form">
+		<textarea
+		  v-model="musicform.prompt"
+		  placeholder="请输入音乐提示词 Prompt"
+		  class="popup-input"
+		  rows="1"
+		></textarea>
+		<textarea
+		  v-model="musicform.style"
+		  placeholder="请输入音乐风格，如 流行/古典"
+		  class="popup-input"
+		  rows="1"
+		></textarea>
+		<textarea
+		  v-model="musicform.title"
+		  placeholder="请输入音乐标题"
+		  class="popup-input"
+		  rows="1"
+		></textarea>
+		<view class="popup-buttons">
+		  <button @click="closeMusicPopup">取消</button>
+		  <button @click="submitGenerateMusic" :loading="loading">生成</button>
+		</view>
+	  </view>
+	</uni-popup>
+
   </view>
 </template>
 
 <script>
 import axios from '@/utils/request';
+import http from "@/utils/request";
 export default {
   data() {
     return {
@@ -255,6 +440,7 @@ export default {
 	  currentSong: {}, 
 	  currentTime: 0,  // 当前播放时间（秒）
 	  duration: 0,     // 总时长（秒）
+	  baseUrl: 'http://localhost:8000',
 	  isSeeking: false, // 是否正在拖拽进度条
       audioElement: null,
       recommendation: {
@@ -262,6 +448,21 @@ export default {
         recommended_wake_time: '07:00',
         recommended_nap_time: '13:30'
       },
+	  musicform: {
+	    prompt: '',
+	    style: '流行',
+	    title: '',
+	    type: '' // 由按钮点击时设定
+	  },
+	  loading: false,
+	  userRecommendInfo: {
+	  	userId: null,
+	  	foodCalories: '',
+	  	exerciseCalories: '',
+	  	sleepTimeStart: '',
+	  	sleepTimeEnd: '',
+		sleepTimeInmid: '',
+	  },
 	  personPlaylist: [
       { id:'无', name: '宁静之夜', duration: '03:45', genre: '自然', url: '111' },
       { id:'无',name: '钢琴协奏曲', duration: '05:20', genre: '古典', url: '111' },
@@ -270,31 +471,43 @@ export default {
       nowPlaylist: { id: null, songs: [] },
       historyPlaylist: { id: null, songs: [] },
       features: [
-        { title: '助眠音乐', icon: 'icon-moon', color: '#8A2BE2', desc: '智能生成助眠白噪音', type: 'sleep' },
-        { title: '放松音乐', icon: 'icon-spa', color: '#00BFFF', desc: '缓解压力背景音乐', type: 'relax' },
-        { title: '我的音乐', icon: 'icon-music', color: '#FF69B4', desc: '播放已保存歌单', type: 'playlist' },
-        { title: '午睡音乐', icon: 'icon-nap', color: '#32CD32', desc: '短时休息背景音', type: 'nap' }
+        { title: '午休助眠', icon: 'icon-moon', color: '#8A2BE2', desc: '智能生成助眠白噪音', type: 'sleep' },
+        { title: '晚睡助眠', icon: 'icon-spa', color: '#00BFFF', desc: '缓解压力背景音乐', type: 'relax' },
+        { title: '个人音乐', icon: 'icon-music', color: '#FF69B4', desc: '播放已保存歌单', type: 'playlist' },
+        { title: '解压音乐', icon: 'icon-nap', color: '#32CD32', desc: '短时休息背景音', type: 'nap' }
       ]
     };
   },
   computed: {
+	filterPlaylist() {
+	  return this.personPlaylist.filter(song => song.genre === '个人导入');
+	},
+    filterPlaylist1() {
+	  return this.personPlaylist.filter(song => song.genre === '午休助眠');
+    },
+	filterPlaylist2() {
+	  return this.personPlaylist.filter(song => song.genre === '晚睡助眠');
+	},
+	filterPlaylist3() {
+	  return this.personPlaylist.filter(song => song.genre === '解压');
+	},
 	handleTouchStart(e) {
 	    this.startY = e.touches[0].clientY
-	  },
+	},
 	  
-	  handleTouchMove(e) {
-	    const deltaY = e.touches[0].clientY - this.startY
-	    const element = e.currentTarget
-	    
-	    // 检测滚动边界
-	    const isTop = element.scrollTop === 0
-	    const isBottom = element.scrollHeight - element.scrollTop === element.clientHeight
-	    
-	    // 阻止边缘滚动传播
-	    if ((isTop && deltaY > 0) || (isBottom && deltaY < 0)) {
-	      e.preventDefault()
-	    }
-	  },
+	handleTouchMove(e) {
+		const deltaY = e.touches[0].clientY - this.startY
+		const element = e.currentTarget
+		
+		// 检测滚动边界
+		const isTop = element.scrollTop === 0
+		const isBottom = element.scrollHeight - element.scrollTop === element.clientHeight
+		
+		// 阻止边缘滚动传播
+		if ((isTop && deltaY > 0) || (isBottom && deltaY < 0)) {
+		  e.preventDefault()
+		}
+	},
 	toggleFavorite(song) {
 	    console.log('收藏歌曲:', song)
 	    // 这里添加实际收藏操作
@@ -314,13 +527,67 @@ export default {
     },
     napDuration() {
       return this.hasNap ? 30 : 0;
-    }
+    },
   },
   
   
   methods: {
-	  
-	  
+	// 打开弹窗并设置 type
+	openMusicModal(type) {
+	  this.musicform.prompt = '';
+	  this.musicform.style = '流行';
+	  this.musicform.title = '';
+	  this.musicform.type = type;
+	  this.$refs.musicPopup.open();
+	},
+	// 关闭弹窗
+	closeMusicPopup() {
+	  this.$refs.musicPopup.close();
+	},
+	// 提交生成请求
+	async submitGenerateMusic() {
+	  if (!this.musicform.prompt || !this.musicform.title) {
+		uni.showToast({ title: '请填写完整信息', icon: 'none' });
+		return;
+	  }
+
+	  this.loading = true;
+
+	  try {
+		const token = uni.getStorageSync('xm-user');
+		const userToken = token ? token.token : '';
+
+		const res = await uni.request({
+		  url: `${this.baseUrl}/music/generate`,
+		  method: 'POST',
+		  header: {
+			'Content-Type': 'application/json',
+			'token': userToken
+		  },
+		  data: {
+			prompt: this.musicform.prompt,
+			style: this.musicform.style || '流行',
+			title: this.musicform.title,
+			type: this.musicform.type || '个人导入'
+		  }
+		});
+
+		if (res.statusCode === 200) {
+		  uni.showToast({ title: '音乐生成中，请稍等2-3分钟后刷新查看', icon: 'success' });
+		  getApp().$global.startMusicTimer();
+		  this.closeMusicPopup();
+		} else {
+		  uni.showToast({ title: res.data.message || '生成失败', icon: 'none' });
+		}
+
+	  } catch (err) {
+		console.error(err);
+		uni.showToast({ title: '请求失败，请检查网络', icon: 'none' });
+	  } finally {
+		this.loading = false;
+	  }
+	},
+
 	// 存储用户
 	initializeUser() {
 	    const storedUser = uni.getStorageSync('xm-user')
@@ -330,19 +597,52 @@ export default {
 	    }
 	    this.user = JSON.parse(JSON.stringify(storedUser))
 	},
-	
+	getUserRecommendInfo(){
+		console.log('获取用户推荐基本信息列表');
+		// 格式化函数：去掉秒
+		function formatTimeToHourMinute(timeStr) {
+		  if (!timeStr) return '';
+		  const [hour, minute] = timeStr.split(':');
+		  return `${hour}:${minute}`;
+		};
+		http.request({
+		      url: '/user-basic-info/recommend/select',
+		      method: 'GET',
+		}).then((res) => {
+		  if (res.code === '200') {
+				this.userRecommendInfo = res.data;
+				console.log(res.data);
+				this.recommendation.recommended_sleep_time = formatTimeToHourMinute(this.userRecommendInfo.sleepTimeStart);
+				this.recommendation.recommended_wake_time = formatTimeToHourMinute(this.userRecommendInfo.sleepTimeEnd);
+				console.log(this.userRecommendInfo.sleepTimeInmid);
+				this.recommendation.recommended_nap_time = formatTimeToHourMinute(this.userRecommendInfo.sleepTimeInmid);
+				console.log(this.recommendation.recommended_nap_time);
+		  } else {
+		    uni.showToast({
+		      title: '获取用户推荐基本信息列表失败',
+		      icon: 'none'
+		    });
+		  }
+		}).catch(err => {
+		  console.error('获取用户推荐基本信息列表失败', err);
+		  uni.showToast({
+		    title: '网络错误，请稍后重试',
+		    icon: 'none'
+		  });
+		});
+		
+	},  
 	
 	// 点击不同模块（例如个人导入、解乏音乐等）所产生的跳转页面或弹窗效果
 	handleFeatureClick(item) {
 	  if (item.type === 'playlist') {
 	    this.$refs.playlistPopup.open()
-	  } else {
-	    const routes = {
-	      sleep: '/pages/music/sleep',
-	      relax: '/pages/music/relax',
-	      nap: '/pages/music/nap'
-	    };
-	    uni.navigateTo({ url: routes[item.type] });
+	  }else if(item.type === 'sleep'){
+		this.$refs.playlistPopup1.open()  
+	  }else if(item.type === 'relax'){
+		this.$refs.playlistPopup2.open()  
+	  }else{
+		this.$refs.playlistPopup3.open()  
 	  }
 	},
 	
@@ -350,6 +650,18 @@ export default {
 	// 关闭个人导入的弹窗
 	closePopup() {
 	  this.$refs.playlistPopup.close()
+	},
+	
+	closePopup1() {
+	  this.$refs.playlistPopup1.close()
+	},
+	
+	closePopup2() {
+	  this.$refs.playlistPopup2.close()
+	},
+	
+	closePopup3() {
+	  this.$refs.playlistPopup3.close()
 	},
 	
 	
@@ -608,6 +920,7 @@ export default {
 	playThis(index) {
 	  this.currentIndex = index;
 	  const song = this.nowPlaylist.songs[index];
+	  console.log('playThis:', song.name, song.url);
 	  
 	  // 增加URL验证
 	  if (!song.url) {
@@ -674,11 +987,24 @@ export default {
 	    console.error('音频初始化异常:', e)
 	  }
 	},*/
-	
+	handleAudioError(e) {
+	  const code = e?.target?.error?.code;
+	  const messages = {
+	    1: 'MEDIA_ERR_ABORTED（用户终止）',
+	    2: 'MEDIA_ERR_NETWORK（网络错误）',
+	    3: 'MEDIA_ERR_DECODE（解码失败）',
+	    4: 'MEDIA_ERR_SRC_NOT_SUPPORTED（格式或资源错误）'
+	  };
+	  console.error(`音频播放错误: ${code} - ${messages[code] || '未知错误'}`);
+	  this.$emit('error', e.target?.error);
+	},
+
 	
 	loadAudio(url) {
-	  // 旧实例销毁逻辑（如前述优化）
+	  console.log('准备加载音频:', url);
+	  //旧实例销毁逻辑（如前述优化）
 	  if (this.audioElement) {
+		console.log("开始执行旧事例销毁");
 	    // 统一管理需要移除的事件监听器
 	    const eventsToRemove = {
 	      'ended': this.nextSong,
@@ -799,7 +1125,8 @@ export default {
 	          musicId: song.id,        // 根据实际数据结构调整
 	          title: song.title,        // 字段映射
 	          type: song.genre,
-	          musicUrl: song.url       // 确保字段名与后端Music类一致
+	          musicUrl: song.url,       // 确保字段名与后端Music类一致
+			  currentSong: this.currentSong
 	        };
 	
 	        // 调用后端接口
@@ -857,6 +1184,8 @@ export default {
       const len = this.nowPlaylist.songs.length;
       this.currentIndex = (this.currentIndex + 1) % len;
 	  this.currentSong = this.nowPlaylist.songs[this.currentIndex];
+	  this.currentTime = 0;
+	  this.duration = this.currentSong.duration;
       this.playThis(this.currentIndex);
     },
 	
@@ -877,6 +1206,7 @@ export default {
   created() {
 	this.initializeUser();
     this.createListByUserId();
+	this.getUserRecommendInfo()
 	this.getPersonListByUserId();
   }
 };
@@ -1301,5 +1631,32 @@ export default {
   width: 48rpx;
   height: 48rpx;
 }
+
+
+.popup-form {
+  padding: 40rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  width: 80vw;
+  box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.2);
+}
+
+.popup-input {
+  width: 100%;
+  height: 56px; /* 控制高度，比如28px更紧凑 */
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none; /* 可选：禁止用户拖拽改变大小 */
+  margin-bottom: 10px;
+}
+
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
 </style>
 

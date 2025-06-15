@@ -1,11 +1,18 @@
 package com.example.controller;
 
 import com.example.common.Result;
+import com.example.context.BaseContext;
 import com.example.entity.Exercise;
 import com.example.entity.ExerciseCheckin;
 import com.example.entity.ExerciseRecommend;
+import com.example.entity.FoodRecommend;
+import com.example.mapper.ExerciseCheckinMapper;
+import com.example.mapper.ExerciseMapper;
 import com.example.service.ExerciseService;
+import com.example.service.PythonHealthSyncService;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +32,14 @@ public class ExerciseController {
     @Autowired
     private ExerciseService exerciseService;
 
+    @Autowired
+    private ExerciseCheckinMapper exerciseCheckinMapper;
+
+    @Autowired
+    private PythonHealthSyncService pythonHealthSyncService;
+
+    private static final Logger logger = LoggerFactory.getLogger(PythonHealthSyncService.class);
+
     /**
      * 获取运动列表
      */
@@ -43,12 +58,33 @@ public class ExerciseController {
         return Result.success(recommendExercises);
     }
 
+    @PostMapping("/generate_recommend")
+    public Result generateRecommend() {
+        Long userId = BaseContext.getCurrentId();
+        LocalDate today = LocalDate.now();
+        String date = today.toString();
+        List<ExerciseCheckin> exerciseCheckins = exerciseCheckinMapper.selectByUserIdAndDate(userId, date);
+        if (exerciseCheckins.size() >= 3) {
+            return Result.error("400", "目前已有三个及以上的推荐或自选，请勿重复操作");
+        }
+        exerciseService.generateRecommend();
+        return Result.success();
+    }
+
     /**
      * 打卡
      */
     @GetMapping("/checkin")
     public Result checkin(@RequestParam Integer checkinId, @RequestParam Integer feedback) {
         exerciseService.checkin(checkinId, feedback);
+        // 触发Python端知识库更新
+        int userId = Math.toIntExact(BaseContext.getCurrentId());
+        try {
+            pythonHealthSyncService.syncUserHealthData(userId, false);
+        } catch (Exception e) {
+            // 即使同步失败也不影响主业务流程
+            logger.warn("触发Python健康数据同步失败，用户ID: {}", userId);
+        }
         return Result.success();
     }
 

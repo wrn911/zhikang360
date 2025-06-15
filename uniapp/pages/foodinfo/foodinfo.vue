@@ -112,6 +112,31 @@
 
 <template>
   <view class="diet-form">
+	  
+	  
+	<!-- 个人目标 -->
+	<view class="form-section">
+	  <text class="section-title">个人目标</text>
+	  <radio-group @change="handleAim">
+	    <view class="checkbox-grid">
+	      <label 
+	        v-for="item in aimOptions" 
+	        :key="item.value" 
+	        class="checkbox-item"
+	        :class="{checked: aim.includes(item.value)}"
+	      >
+	        <radio 
+	          :value="item.value" 
+	          :checked="aim.includes(item.value)" 
+	          color="#4CAF50"
+	        />
+	        <text class="checkbox-label">{{ item.label }}</text>
+	      </label>
+	    </view>
+	  </radio-group>
+	</view>
+	
+	
     <!-- 饮食喜好 -->
     <view class="form-section">
       <text class="section-title">饮食喜好（可多选）</text>
@@ -219,6 +244,7 @@ export default {
     return {
       dietPreferences: [],
       avoidFoods: [],
+	  aim: '',
       willingness: 3,
       customDiet: '',
       customAvoid: '',
@@ -235,6 +261,11 @@ export default {
         { value: '牛奶', label: '牛奶' },
 		{ value: '暂无请忽略', label: '无' }
       ],
+	  aimOptions: [
+	    { value: '正常', label: '保持体形' },
+	    { value: '减脂', label: '减脂' },
+	    { value: '增肌', label: '增肌' },
+	  ],
       submitStatus: null,
       isSubmitting: false
     }
@@ -245,6 +276,9 @@ export default {
     }
   },
   methods: {
+	handleAim(e) {
+	    this.aim = e.detail.value;
+	},
     handleDietPreference(e) {
       this.dietPreferences = e.detail.value
     },
@@ -290,6 +324,7 @@ export default {
 	  ];
 	
 	  const data = {
+		aim: this.aim,
 		preferences,
 		avoids,
 		willingness: this.willingness

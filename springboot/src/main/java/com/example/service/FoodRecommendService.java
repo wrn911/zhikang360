@@ -1,13 +1,19 @@
 package com.example.service;
 
+import com.example.common.enums.FoodGroceryEnum;
+import com.example.common.enums.FoodTimeEnum;
 import com.example.context.BaseContext;
 import com.example.entity.*;
 import com.example.DAO.FoodCheckinAddRequest;
 import com.example.DAO.FoodCheckinStatsDAO;
 import java.time.format.DateTimeFormatter;
+
+import com.example.mapper.FoodInfoMapper;
 import com.example.mapper.FoodMapper;
 import com.example.mapper.FoodRecommendMapper;
 import java.time.YearMonth;
+
+import com.example.mapper.UserRecommendInfoMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
@@ -20,10 +26,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 public class FoodRecommendService {
-    private static final float TARGET_CALORIES = 800.0f;
 
     @Autowired
     private FoodMapper foodMapper;
@@ -31,14 +38,17 @@ public class FoodRecommendService {
     @Autowired
     private FoodRecommendMapper foodRecommendMapper;
 
+    @Autowired
+    private UserRecommendInfoMapper userRecommendInfoMapper;
+
+    @Autowired
+    private FoodInfoMapper foodInfoMapper;
+
     public Map<String, ArrayList<FoodRecommend>> simpleSelect() {
         Long userId = BaseContext.getCurrentId();
         LocalDate today = LocalDate.now();
         String date = today.toString();
         List<FoodRecommend> foodRecommends = foodRecommendMapper.selectByUserIdAndDate(userId, date);
-        if(foodRecommends.isEmpty()){
-            this.recommend(userId);
-        }
         Map<String, ArrayList<FoodRecommend>> foodRecommendMap = new HashMap<>();
         //格式：食物类型：【相关食物】
         for (FoodRecommend foodRecommend : foodRecommends) {
@@ -51,39 +61,86 @@ public class FoodRecommendService {
     }
     @Transactional
     public void recommend(Long userId) {
-        List<Food> allFoods = foodMapper.selectAll(new Food());
-        this.recommendFoods(TARGET_CALORIES, allFoods, "早餐", userId);
-        this.recommendFoods(TARGET_CALORIES, allFoods, "午餐", userId);
-        this.recommendFoods(TARGET_CALORIES, allFoods, "晚餐", userId);
+        UserRecommendInfo userRecommendInfo = userRecommendInfoMapper.selectByUserId(userId);
+        String aim = foodInfoMapper.selectByUserId(userId).getAim();
+        int recommendCalories = userRecommendInfo.getFoodCalories();
+        this.recommendFoods(FoodTimeEnum.早餐.name(), (int)(recommendCalories * 0.3), aim, userId);
+        this.recommendFoods(FoodTimeEnum.午餐.name(), (int)(recommendCalories * 0.4), aim, userId);
+        this.recommendFoods(FoodTimeEnum.晚餐.name(), (int)(recommendCalories * 0.3), aim, userId);
     }
 
-    public void recommendFoods(float targetCalories, List<Food> allFoods, String type, Long userId) {
-        Collections.shuffle(allFoods);//打乱列表，引入随机性
-        Double totalCalories = 0.0;
-        float everCalories = targetCalories / 3.0f;
-        for (Food food : allFoods) {
-            if (food.getCalories() <= everCalories) {
-                FoodRecommend foodRecommend = new FoodRecommend();
-                foodRecommend.setUserId(userId);
-                foodRecommend.setFoodId(food.getId());
-                foodRecommend.setFoodName(food.getName());
-                foodRecommend.setRecommendType(type);
-                Integer grams = Math.round(everCalories / food.getCalories()) * 100;
-                foodRecommend.setGramAte(grams);
-                Double b = (double)grams / 100;
-                foodRecommend.setCaloriesAte(Math.round(food.getCalories() * b * 10) / 10.0);
-                foodRecommend.setCarbohydratesAte(Math.round(food.getCarbohydrates() * b * 10) / 10.0);
-                foodRecommend.setFatAte(Math.round(food.getFat() * b * 10) / 10.0);
-                foodRecommend.setProteinAte(Math.round(food.getProtein() * b * 10) / 10.0);
-                foodRecommend.setFiberAte(Math.round(food.getFiber() * b * 10) / 10.0);
-                foodRecommend.setCreateTime(LocalDateTime.now());
-                totalCalories += foodRecommend.getCaloriesAte();
-                foodRecommendMapper.insert(foodRecommend);
-                // 如果已达到目标卡路里消耗，停止推荐
-                if (totalCalories >= targetCalories*0.95) {
-                    break;
-                }
-            }
-        }
+    public void recommendFoods(String time, int calories, String aim, Long userId) {
+        int zhushiTarget = (int) (calories * 0.4);
+        int zhengcanTarget = (int) (calories * 0.4);
+        int fushiTarget = (int) (calories * 0.2);
+
+        List<UserFoodRecommendList> foodZhushi = foodRecommendMapper.selectByAimAndGroceryAndTime(userId, aim, FoodGroceryEnum.主食.name(), time);
+        List<UserFoodRecommendList> foodZhengcan = foodRecommendMapper.selectByAimAndGroceryAndTime(userId, aim, FoodGroceryEnum.正餐.name(), time);
+        List<UserFoodRecommendList> foodFushi = foodRecommendMapper.selectByAimAndGroceryAndTime(userId, aim, FoodGroceryEnum.辅食.name(), time);
+
+        FoodRecommend recommendZhushi = buildRecommend(foodZhushi, zhushiTarget, userId, time);
+        FoodRecommend recommendZhengcan = buildRecommend(foodZhengcan, zhengcanTarget, userId, time);
+        FoodRecommend recommendFushi = buildRecommend(foodFushi, fushiTarget, userId, time);
+
+        // 保存推荐，可调用 foodRecommendMapper.insert() 三次
+        foodRecommendMapper.insert(recommendZhushi);
+        foodRecommendMapper.insert(recommendZhengcan);
+        foodRecommendMapper.insert(recommendFushi);
+
     }
+
+    private FoodRecommend buildRecommend(List<UserFoodRecommendList> candidates, int targetCalories, Long userId, String time) {
+        if (candidates == null || candidates.isEmpty()) return null;
+
+        // 构建前缀和（轮盘赌）
+        double totalWeight = candidates.stream().mapToDouble(UserFoodRecommendList::getWeight).sum();
+        List<Double> cumulative = new ArrayList<>();
+        double acc = 0;
+        for (UserFoodRecommendList f : candidates) {
+            acc += f.getWeight() / totalWeight;
+            cumulative.add(acc);
+        }
+
+        double r = Math.random();
+        int index = 0;
+        while (index < cumulative.size() && r > cumulative.get(index)) index++;
+
+        UserFoodRecommendList selected = candidates.get(Math.min(index, candidates.size() - 1));
+        Food food = foodMapper.selectById(selected.getFoodId());
+        if (food == null || food.getCalories() == 0) return null;
+
+        double rawGrams = (targetCalories * 100.0) / food.getCalories();
+        int grams = Math.max(50, Math.min(600, (int) (Math.round(rawGrams / 50.0) * 50)));
+
+        FoodRecommend result = new FoodRecommend();
+        result.setUserId(userId);
+        result.setRecommendType(time);
+        result.setFoodId(food.getId());
+        result.setFoodName(food.getName());
+        result.setGramAte(grams);  // 保证在 50~600 且为 50 的倍数
+
+        result.setCaloriesAte(round(food.getCalories() * grams / 100.0));
+        result.setCarbohydratesAte(round(food.getCarbohydrates() * grams / 100.0));
+        result.setFatAte(round(food.getFat() * grams / 100.0));
+        result.setProteinAte(round(food.getProtein() * grams / 100.0));
+        result.setFiberAte(round(food.getFiber() * grams / 100.0));
+        result.setCreateTime(LocalDateTime.now());
+
+        return result;
+    }
+
+    private double round(double value) {
+        return BigDecimal.valueOf(value)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
+    }
+
+    public List<UserFoodRecommendList> GetUserFoodRecommendList(){
+        Long userId = BaseContext.getCurrentId();
+        LocalDate date = LocalDate.now();
+        return foodRecommendMapper.selectTodayRecommendedFoods(userId, date);
+    }
+
+
+
 }

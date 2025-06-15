@@ -1,0 +1,13 @@
+{
+    "localdb":{
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "wangruining2004",
+        "port": 3306,
+        "database": "zhikang360"
+    },
+    "glm": {
+        "api_key": "118aea86606f4e2f82750c54d3bb380c.DxtxnaKQhFz5EHPY",
+        "url": "https://open.bigmodel.cn/api/paas/v4/"
+    }
+}

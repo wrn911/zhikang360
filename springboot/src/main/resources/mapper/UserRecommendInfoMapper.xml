@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.UserRecommendInfoMapper">
+
+    <!-- 查询 -->
+    <select id="selectByUserId" resultType="com.example.entity.UserRecommendInfo">
+        SELECT * FROM user_recommend_info WHERE user_id = #{userId}
+    </select>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.example.entity.UserRecommendInfo">
+        INSERT INTO user_recommend_info (
+        user_id, food_calories, exercise_calories, sleep_time_start, sleep_time_end, sleep_time_inmid
+        ) VALUES (
+        #{userId}, #{foodCalories}, #{exerciseCalories}, #{sleepTimeStart}, #{sleepTimeEnd}, #{sleepTimeInmid}
+        )
+    </insert>
+
+    <!-- 修改 -->
+    <update id="update" parameterType="com.example.entity.UserRecommendInfo">
+        UPDATE user_recommend_info
+        SET food_calories = #{foodCalories},
+        exercise_calories = #{exerciseCalories},
+        sleep_time_start = #{sleepTimeStart},
+        sleep_time_end = #{sleepTimeEnd},
+        sleep_time_inmid = #{sleepTimeInmid}
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>
